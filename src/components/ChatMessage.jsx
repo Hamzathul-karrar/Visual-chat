@@ -3,6 +3,34 @@ import ReactMarkdown from 'react-markdown';
 import AnimationRenderer from './AnimationRenderer';
 import AnimationErrorBoundary from './AnimationErrorBoundary';
 
+function AnimationSkeleton() {
+  return (
+    <motion.div
+      animate={{ opacity: [0.2, 0.4, 0.2] }}
+      transition={{ duration: 2, repeat: Infinity }}
+      style={{
+        height: 180,
+        width: '100%',
+        background:
+          'linear-gradient(135deg, rgba(129,140,248,0.05) 0%, rgba(99,102,241,0.08) 50%, rgba(129,140,248,0.05) 100%)',
+        borderRadius: 12,
+        marginTop: 8,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <motion.span
+        animate={{ rotate: 360 }}
+        transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
+        style={{ fontSize: 28, opacity: 0.3 }}
+      >
+        ✦
+      </motion.span>
+    </motion.div>
+  );
+}
+
 function LoadingSkeleton() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -20,35 +48,12 @@ function LoadingSkeleton() {
           }}
         />
       ))}
-      {/* Animation skeleton */}
-      <motion.div
-        animate={{ opacity: [0.2, 0.4, 0.2] }}
-        transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
-        style={{
-          height: 180,
-          width: '100%',
-          background:
-            'linear-gradient(135deg, rgba(129,140,248,0.05) 0%, rgba(99,102,241,0.08) 50%, rgba(129,140,248,0.05) 100%)',
-          borderRadius: 12,
-          marginTop: 8,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <motion.span
-          animate={{ rotate: 360 }}
-          transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
-          style={{ fontSize: 28, opacity: 0.3 }}
-        >
-          ✦
-        </motion.span>
-      </motion.div>
+      <AnimationSkeleton />
     </div>
   );
 }
 
-export default function ChatMessage({ message }) {
+export default function ChatMessage({ message, onRegenerateAnimation }) {
   const isUser = message.role === 'user';
 
   return (
@@ -179,7 +184,7 @@ export default function ChatMessage({ message }) {
               )}
 
               {/* Animation */}
-              {message.animationCode && (
+              {(message.animationCode || message.isAnimationLoading) && (
                 <div
                   style={{
                     borderTop: '1px solid rgba(255, 255, 255, 0.05)',
@@ -206,9 +211,30 @@ export default function ChatMessage({ message }) {
                       ✦ Live Animation
                     </span>
                   </div>
-                  <AnimationErrorBoundary>
-                    <AnimationRenderer code={message.animationCode} />
-                  </AnimationErrorBoundary>
+                  {message.isAnimationLoading ? (
+                    <AnimationSkeleton />
+                  ) : (
+                    <div
+                      style={{
+                        width: '100%',
+                        overflowX: 'auto',
+                        overflowY: 'auto',
+                        borderRadius: 16,
+                        position: 'relative',
+                      }}
+                    >
+                      <AnimationErrorBoundary
+                        key={message.animationCode}
+                        onRegenerate={
+                          onRegenerateAnimation
+                            ? () => onRegenerateAnimation(message.id)
+                            : undefined
+                        }
+                      >
+                        <AnimationRenderer code={message.animationCode} />
+                      </AnimationErrorBoundary>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

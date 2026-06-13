@@ -6,7 +6,7 @@ import WelcomeScreen from './WelcomeScreen';
 import useChat from '../hooks/useChat';
 
 export default function ChatContainer() {
-  const { messages, isLoading, handleSubmit } = useChat();
+  const { messages, isLoading, handleSubmit, provider, setProvider } = useChat();
   const messagesEndRef = useRef(null);
 
   // Auto-scroll to bottom on new messages
@@ -76,34 +76,85 @@ export default function ChatContainer() {
               color: '#475569',
             }}
           >
-            Powered by Gemini · Live animations
+            Powered by {provider === 'groq' ? 'Groq (Llama 3.3)' : 'Gemini'} · Live animations
           </p>
         </div>
 
-        {/* Status indicator */}
+        {/* Provider selector & Status Indicator */}
         <div
           style={{
             marginLeft: 'auto',
             display: 'flex',
             alignItems: 'center',
-            gap: 6,
+            gap: 16,
           }}
         >
+          {/* Toggle */}
           <div
             style={{
-              width: 7,
-              height: 7,
-              borderRadius: '50%',
-              background: isLoading ? '#f59e0b' : '#34d399',
-              boxShadow: isLoading
-                ? '0 0 8px rgba(245, 158, 11, 0.4)'
-                : '0 0 8px rgba(52, 211, 153, 0.4)',
-              transition: 'all 0.3s ease',
+              display: 'flex',
+              alignItems: 'center',
+              background: 'rgba(255, 255, 255, 0.03)',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              borderRadius: 8,
+              padding: 2,
+              gap: 2,
             }}
-          />
-          <span style={{ fontSize: 11, color: '#475569' }}>
-            {isLoading ? 'Generating...' : 'Ready'}
-          </span>
+          >
+            <button
+              onClick={() => setProvider('gemini')}
+              disabled={isLoading}
+              style={{
+                background: provider === 'gemini' ? 'rgba(129, 140, 248, 0.15)' : 'transparent',
+                border: 'none',
+                borderRadius: 6,
+                color: provider === 'gemini' ? '#a5b4fc' : '#94a3b8',
+                padding: '4px 10px',
+                fontSize: 12,
+                fontWeight: 500,
+                cursor: isLoading ? 'not-allowed' : 'pointer',
+                transition: 'all 0.2s',
+              }}
+            >
+              Gemini
+            </button>
+            <button
+              onClick={() => setProvider('groq')}
+              disabled={isLoading}
+              style={{
+                background: provider === 'groq' ? 'rgba(129, 140, 248, 0.15)' : 'transparent',
+                border: 'none',
+                borderRadius: 6,
+                color: provider === 'groq' ? '#a5b4fc' : '#94a3b8',
+                padding: '4px 10px',
+                fontSize: 12,
+                fontWeight: 500,
+                cursor: isLoading ? 'not-allowed' : 'pointer',
+                transition: 'all 0.2s',
+              }}
+            >
+              Groq
+            </button>
+          </div>
+
+          {/* Status */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <div
+              style={{
+                width: 7,
+                height: 7,
+                borderRadius: '50%',
+                background: isLoading ? '#f59e0b' : '#34d399',
+                boxShadow: isLoading
+                  ? '0 0 8px rgba(245, 158, 11, 0.4)'
+                  : '0 0 8px rgba(52, 211, 153, 0.4)',
+                transition: 'all 0.3s ease',
+              }}
+            />
+            <span style={{ fontSize: 11, color: '#475569' }}>
+              {isLoading ? 'Generating...' : 'Ready'}
+            </span>
+          </div>
         </div>
       </header>
 

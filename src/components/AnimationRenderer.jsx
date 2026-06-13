@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
-import { motion } from 'framer-motion';
 import React from 'react';
 import { transform } from '@babel/standalone';
+import rough from 'roughjs';
 
 /**
  * Aggressively clean LLM output to extract just the JS expression.
@@ -17,14 +17,19 @@ function cleanLLMCode(raw) {
 
   code = code.trim();
 
+  // Fix common LLM syntax mistakes:
+  // 1. Double parenthesis in cleanup arrow function: return () () => ...
+  code = code.replace(/(\(\s*\)\s*){2,}=>/g, '() =>');
+
   // Ensure code starts with the factory expression
-  const factoryStart = code.indexOf('(motion, React)');
-  if (factoryStart > 0) {
-    code = code.substring(factoryStart);
+  const factoryMatch = code.match(/\(\s*(rough|motion)\s*,\s*React\s*\)/);
+  if (factoryMatch) {
+    code = code.substring(factoryMatch.index);
   }
 
   // Trim trailing text after the balanced closing brace
-  if (code.startsWith('(motion, React)') && !code.endsWith('null')) {
+  const isFactory = /^\(\s*(rough|motion)\s*,\s*React\s*\)/.test(code);
+  if (isFactory && !code.endsWith('null')) {
     const lastBrace = findBalancedEnd(code);
     if (lastBrace !== -1 && lastBrace < code.length - 1) {
       code = code.substring(0, lastBrace + 1);
@@ -96,7 +101,7 @@ function transformJSX(code) {
   } catch (err) {
     console.error('Babel JSX transform failed:', err.message);
     console.error('Code being transformed:', code.substring(0, 200));
-    throw new Error(`JSX transform failed: ${err.message}`);
+    throw new Error(`JSX transform failed: ${err.message}`, { cause: err });
   }
 }
 
@@ -110,7 +115,7 @@ function transformJSX(code) {
  * 4. Call the factory to get the component
  */
 export default function AnimationRenderer({ code }) {
-  const Component = useMemo(() => {
+  const animationElement = useMemo(() => {
     if (!code) return null;
 
     try {
@@ -134,13 +139,13 @@ export default function AnimationRenderer({ code }) {
 
       // Step 2: Evaluate with new Function
       const factory = new Function(
-        'motion',
+        'rough',
         'React',
         `"use strict"; return (${jsCode})`
       );
 
       // Step 3: Get the arrow function
-      const arrowFn = factory(motion, React);
+      const arrowFn = factory(rough, React);
 
       if (arrowFn === null) return null;
 
@@ -150,16 +155,17 @@ export default function AnimationRenderer({ code }) {
       }
 
       // Step 4: Call the arrow function to get the component
-      const component = arrowFn(motion, React);
+      const Component = arrowFn(rough, React);
 
-      if (component === null) return null;
+      if (Component === null) return null;
 
-      if (typeof component === 'function') {
+      if (typeof Component === 'function') {
         console.log('--- Animation: component created successfully ✓');
-        return component;
+        // eslint-disable-next-line react-hooks/error-boundaries, react-hooks/static-components
+        return <Component />;
       }
 
-      console.warn('AnimationRenderer: unexpected result type:', typeof component);
+      console.warn('AnimationRenderer: unexpected result type:', typeof Component);
       return null;
     } catch (err) {
       console.error('AnimationRenderer: error:', err.message);
@@ -167,11 +173,11 @@ export default function AnimationRenderer({ code }) {
     }
   }, [code]);
 
-  if (!Component) return null;
+  if (!animationElement) return null;
 
   return (
     <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-      <Component />
+      {animationElement}
     </div>
   );
 }
