@@ -4,7 +4,11 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&family=Google+Sans+Mono&display=swap');
 
-/* Reset */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Critical base resets (hardcoded for reliability) ── */
 *,
 *::before,
 *::after {
@@ -35,13 +39,13 @@ body {
   overflow: hidden;
 }
 
-/* Selection */
+/* ── Selection ── */
 ::selection {
   background: rgba(138, 180, 248, 0.25);
   color: #e8eaed;
 }
 
-/* Scrollbar */
+/* ── Scrollbar ── */
 ::-webkit-scrollbar {
   width: 5px;
 }
@@ -64,13 +68,12 @@ body {
   scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
 }
 
-/* Placeholder */
+/* ── Inputs ── */
 textarea::placeholder,
 input::placeholder {
   color: #9aa0a6;
 }
 
-/* Focus */
 :focus-visible {
   outline: 2px solid rgba(138, 180, 248, 0.6);
   outline-offset: 2px;
@@ -81,7 +84,17 @@ input:focus {
   outline: none;
 }
 
-/* Markdown typography */
+/* ── Images / SVGs ── */
+img {
+  display: block;
+  max-width: 100%;
+}
+
+svg {
+  display: block;
+}
+
+/* ── Markdown typography (component classes) ── */
 .markdown-content a {
   color: #8ab4f8;
   text-decoration: none;
@@ -106,18 +119,8 @@ input:focus {
 .markdown-content h2 { font-size: 1.2em; }
 .markdown-content h3 { font-size: 1.05em; }
 
-/* Images */
-img {
-  display: block;
-  max-width: 100%;
-}
-
-svg {
-  display: block;
-}
-
-/* Prompt card shimmer animation */
+/* ── Shimmer animation ── */
 @keyframes shimmer {
-  0% { background-position: -400px 0; }
-  100% { background-position: 400px 0; }
+  0%   { background-position: -400px 0; }
+  100% { background-position:  400px 0; }
 }

@@ -35,39 +35,22 @@ export default function WelcomeScreen({ onPromptClick }) {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flex: 1,
-        padding: '48px 24px 32px',
-        gap: 0,
-        maxWidth: 768,
-        margin: '0 auto',
-        width: '100%',
-      }}
+      className="flex flex-col items-center justify-center flex-1 px-6 pt-12 pb-8 gap-0 max-w-welcome mx-auto w-full"
     >
       {/* Logo */}
-      <motion.div variants={itemVariants} style={{ marginBottom: 24 }}>
+      <motion.div variants={itemVariants} className="mb-6">
         <VisualChatLogo size={72} />
       </motion.div>
 
       {/* Title */}
       <motion.h1
         variants={itemVariants}
+        className="text-[clamp(26px,4vw,38px)] font-medium m-0 mb-[14px] text-center leading-[1.2] tracking-[-0.02em]"
         style={{
-          fontSize: 'clamp(26px, 4vw, 38px)',
-          fontWeight: 500,
-          margin: 0,
-          marginBottom: 14,
           background: 'linear-gradient(90deg, #e3e3e3 0%, #8ab4f8 50%, #c084fc 100%)',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
           backgroundClip: 'text',
-          textAlign: 'center',
-          lineHeight: 1.2,
-          letterSpacing: '-0.02em',
         }}
       >
         Visual Chat
@@ -76,29 +59,16 @@ export default function WelcomeScreen({ onPromptClick }) {
       {/* Subtitle */}
       <motion.p
         variants={itemVariants}
-        style={{
-          fontSize: 15,
-          color: '#9aa0a6',
-          margin: '0 0 60px',
-          maxWidth: 480,
-          lineHeight: 1.7,
-          textAlign: 'center',
-        }}
+        className="text-[15px] text-vc-muted m-[0_0_60px] max-w-welcomeSub leading-[1.7] text-center"
       >
         Ask any technical question and get a visual explanation
         with live animated illustrations
       </motion.p>
 
-      {/* Prompt cards — Gemini-style 2×2 grid */}
+      {/* Prompt cards */}
       <motion.div
         variants={itemVariants}
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(2, 1fr)',
-          gap: 10,
-          width: '100%',
-          maxWidth: 600,
-        }}
+        className="grid grid-cols-2 gap-[10px] w-full max-w-prompts"
       >
         {SUGGESTED_PROMPTS.map((item) => (
           <motion.button
@@ -106,47 +76,13 @@ export default function WelcomeScreen({ onPromptClick }) {
             onClick={() => onPromptClick(item.prompt)}
             whileHover={{ scale: 1.015, y: -1 }}
             whileTap={{ scale: 0.985 }}
-            style={{
-              background: '#1e1f20',
-              border: '1px solid #2d2e30',
-              borderRadius: 16,
-              padding: '16px 18px',
-              cursor: 'pointer',
-              textAlign: 'left',
-              transition: 'background 0.2s ease, border-color 0.2s ease',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 6,
-              minHeight: 90,
-              marginBottom: 80
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = '#28292a';
-              e.currentTarget.style.borderColor = '#3d3e40';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = '#1e1f20';
-              e.currentTarget.style.borderColor = '#2d2e30';
-            }}
+            className="bg-vc-surface border border-vc-line rounded-2xl px-[18px] py-4 cursor-pointer text-left transition-colors duration-200 flex flex-col gap-[6px] min-h-[90px] mb-20 hover:bg-vc-hover hover:border-vc-lineHover"
           >
-            <span style={{ fontSize: 20 }}>{item.icon}</span>
-            <div
-              style={{
-                color: '#e3e3e3',
-                fontSize: 13,
-                fontWeight: 500,
-                lineHeight: 1.4,
-              }}
-            >
+            <span className="text-[20px]">{item.icon}</span>
+            <div className="text-vc-primary text-[13px] font-medium leading-[1.4]">
               {item.title}
             </div>
-            <div
-              style={{
-                color: '#9aa0a6',
-                fontSize: 11.5,
-                lineHeight: 1.4,
-              }}
-            >
+            <div className="text-vc-muted text-[11.5px] leading-[1.4]">
               {item.desc}
             </div>
           </motion.button>

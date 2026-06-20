@@ -14,16 +14,6 @@ function TrashIcon() {
   );
 }
 
-function PencilIcon() {
-  return (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-    </svg>
-  );
-}
-
 function ChevronLeft() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
@@ -77,7 +67,6 @@ export default function Sidebar({ sessions, activeSessionId, onNewChat, onLoadSe
       setConfirmDeleteId(null);
     } else {
       setConfirmDeleteId(id);
-      // Auto-cancel confirm after 2s
       setTimeout(() => setConfirmDeleteId((cur) => (cur === id ? null : cur)), 2000);
     }
   }
@@ -88,59 +77,18 @@ export default function Sidebar({ sessions, activeSessionId, onNewChat, onLoadSe
     <motion.aside
       animate={{ width: sidebarWidth }}
       transition={{ duration: 0.25, ease: 'easeInOut' }}
-      style={{
-        height: '100vh',
-        background: '#1a1a1b',
-        borderRight: '1px solid #2d2e30',
-        display: 'flex',
-        flexDirection: 'column',
-        flexShrink: 0,
-        overflow: 'hidden',
-        position: 'relative',
-        zIndex: 20,
-      }}
+      className="h-screen bg-vc-sidebar border-r border-vc-line flex flex-col shrink-0 overflow-hidden relative z-20"
     >
-      {/* Top section: collapse toggle + logo */}
-      <div
-        style={{
-          padding: collapsed ? '14px 12px' : '14px 16px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: 10,
-          flexShrink: 0,
-          minHeight: 56,
-        }}
-      >
-        {/* Collapse toggle */}
+      {/* Top: collapse toggle + logo */}
+      <div className={`flex items-center gap-[10px] shrink-0 min-h-[56px] ${collapsed ? 'px-3 py-[14px]' : 'px-4 py-[14px]'}`}>
         <button
           onClick={() => setCollapsed((c) => !c)}
           title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-          style={{
-            background: 'transparent',
-            border: 'none',
-            color: '#9aa0a6',
-            cursor: 'pointer',
-            padding: 6,
-            borderRadius: 8,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexShrink: 0,
-            transition: 'background 0.15s ease, color 0.15s ease',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = '#28292a';
-            e.currentTarget.style.color = '#e3e3e3';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'transparent';
-            e.currentTarget.style.color = '#9aa0a6';
-          }}
+          className="bg-transparent border-none text-vc-muted cursor-pointer p-[6px] rounded-lg flex items-center justify-center shrink-0 transition-all duration-150 hover:bg-vc-hover hover:text-vc-primary"
         >
           {collapsed ? <ChevronRight /> : <ChevronLeft />}
         </button>
 
-        {/* Logo + name — hidden when collapsed */}
         <AnimatePresence>
           {!collapsed && (
             <motion.div
@@ -148,16 +96,10 @@ export default function Sidebar({ sessions, activeSessionId, onNewChat, onLoadSe
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.15 }}
-              style={{ display: 'flex', alignItems: 'center', gap: 8, overflow: 'hidden' }}
+              className="flex items-center gap-2 overflow-hidden"
             >
               <VisualChatLogo size={24} />
-              <span style={{
-                fontSize: 15,
-                fontWeight: 500,
-                color: '#e3e3e3',
-                whiteSpace: 'nowrap',
-                letterSpacing: '-0.01em',
-              }}>
+              <span className="text-[15px] font-medium text-vc-primary whitespace-nowrap tracking-[-0.01em]">
                 Visual Chat
               </span>
             </motion.div>
@@ -166,51 +108,19 @@ export default function Sidebar({ sessions, activeSessionId, onNewChat, onLoadSe
       </div>
 
       {/* New Chat button */}
-      <div style={{ padding: collapsed ? '4px 8px' : '4px 12px', flexShrink: 0 }}>
+      <div className={`shrink-0 ${collapsed ? 'px-2 py-1' : 'px-3 py-1'}`}>
         <button
           onClick={onNewChat}
           title="New chat"
-          style={{
-            width: '100%',
-            background: 'transparent',
-            border: '1px solid #2d2e30',
-            borderRadius: 10,
-            padding: collapsed ? '9px 0' : '9px 14px',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: collapsed ? 'center' : 'flex-start',
-            gap: 9,
-            color: '#e3e3e3',
-            fontSize: 13.5,
-            fontWeight: 500,
-            fontFamily: 'inherit',
-            transition: 'background 0.15s ease, border-color 0.15s ease',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = '#28292a';
-            e.currentTarget.style.borderColor = '#3d3e40';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'transparent';
-            e.currentTarget.style.borderColor = '#2d2e30';
-          }}
+          className={`w-full bg-transparent border border-vc-line rounded-[10px] cursor-pointer flex items-center gap-[9px] text-vc-primary text-[13.5px] font-medium font-sans transition-all duration-150 hover:bg-vc-hover hover:border-vc-lineHover ${collapsed ? 'justify-center py-[9px] px-0' : 'justify-start py-[9px] px-[14px]'}`}
         >
-          {/* Plus icon */}
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
             <line x1="12" y1="5" x2="12" y2="19" />
             <line x1="5" y1="12" x2="19" y2="12" />
           </svg>
           <AnimatePresence>
             {!collapsed && (
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.12 }}
-                style={{ whiteSpace: 'nowrap' }}
-              >
+              <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.12 }} className="whitespace-nowrap">
                 New chat
               </motion.span>
             )}
@@ -219,28 +129,10 @@ export default function Sidebar({ sessions, activeSessionId, onNewChat, onLoadSe
       </div>
 
       {/* Chat history list */}
-      <div
-        style={{
-          flex: 1,
-          overflowY: 'auto',
-          overflowX: 'hidden',
-          padding: collapsed ? '8px 4px' : '8px 8px',
-        }}
-      >
+      <div className={`flex-1 overflow-y-auto overflow-x-hidden ${collapsed ? 'px-1 py-2' : 'px-2 py-2'}`}>
         <AnimatePresence>
           {!collapsed && sessions.length === 0 && (
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              style={{
-                color: '#5f6368',
-                fontSize: 12,
-                textAlign: 'center',
-                padding: '24px 8px',
-                lineHeight: 1.6,
-              }}
-            >
+            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-vc-faint text-xs text-center px-2 py-6 leading-[1.6]">
               Your conversations will appear here
             </motion.p>
           )}
@@ -251,18 +143,9 @@ export default function Sidebar({ sessions, activeSessionId, onNewChat, onLoadSe
             const items = grouped[groupName];
             if (!items || items.length === 0) return null;
             return (
-              <div key={groupName} style={{ marginBottom: 8 }}>
+              <div key={groupName} className="mb-2">
                 {/* Group label */}
-                <div
-                  style={{
-                    fontSize: 10.5,
-                    fontWeight: 600,
-                    color: '#5f6368',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.06em',
-                    padding: '8px 8px 4px',
-                  }}
-                >
+                <div className="text-[10.5px] font-semibold text-vc-faint uppercase tracking-[0.06em] px-2 pt-2 pb-1">
                   {groupName}
                 </div>
 
@@ -283,66 +166,25 @@ export default function Sidebar({ sessions, activeSessionId, onNewChat, onLoadSe
                       onClick={() => onLoadSession(session.id)}
                       onMouseEnter={() => setHoveredId(session.id)}
                       onMouseLeave={() => { setHoveredId(null); setConfirmDeleteId(null); }}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 6,
-                        padding: '8px 10px',
-                        borderRadius: 8,
-                        cursor: 'pointer',
-                        background: isActive ? '#28292a' : isHovered ? '#222324' : 'transparent',
-                        borderLeft: isActive ? '2px solid #8ab4f8' : '2px solid transparent',
-                        transition: 'background 0.15s ease',
-                        position: 'relative',
-                        marginBottom: 1,
-                      }}
+                      className={`flex items-center gap-[6px] px-[10px] py-2 rounded-lg cursor-pointer transition-colors duration-150 relative mb-[1px] border-l-2 ${isActive ? 'bg-vc-hover border-vc-blue' : isHovered ? 'bg-[#222324] border-transparent' : 'bg-transparent border-transparent'}`}
                     >
                       {/* Chat icon */}
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
-                        stroke={isActive ? '#8ab4f8' : '#9aa0a6'} strokeWidth="2"
-                        strokeLinecap="round" strokeLinejoin="round"
-                        style={{ flexShrink: 0 }}>
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={isActive ? '#8ab4f8' : '#9aa0a6'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
                         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                       </svg>
 
                       {/* Title */}
-                      <span
-                        style={{
-                          fontSize: 13,
-                          color: isActive ? '#e3e3e3' : '#bdc1c6',
-                          flex: 1,
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap',
-                          lineHeight: 1.4,
-                        }}
-                      >
+                      <span className={`text-[13px] flex-1 overflow-hidden text-ellipsis whitespace-nowrap leading-[1.4] ${isActive ? 'text-vc-primary' : 'text-vc-secondary'}`}>
                         {session.title}
                       </span>
 
-                      {/* Delete button — shown on hover */}
+                      {/* Delete button */}
                       {isHovered && (
                         <button
                           onClick={(e) => handleDelete(e, session.id)}
                           title={isConfirming ? 'Click again to confirm' : 'Delete chat'}
-                          style={{
-                            background: isConfirming ? 'rgba(242,139,130,0.15)' : 'transparent',
-                            border: 'none',
-                            color: isConfirming ? '#f28b82' : '#9aa0a6',
-                            cursor: 'pointer',
-                            padding: '2px 4px',
-                            borderRadius: 5,
-                            display: 'flex',
-                            alignItems: 'center',
-                            flexShrink: 0,
-                            transition: 'all 0.15s ease',
-                          }}
-                          onMouseEnter={(e) => {
-                            if (!isConfirming) e.currentTarget.style.color = '#f28b82';
-                          }}
-                          onMouseLeave={(e) => {
-                            if (!isConfirming) e.currentTarget.style.color = '#9aa0a6';
-                          }}
+                          className={`border-none cursor-pointer p-[2px_4px] rounded-[5px] flex items-center shrink-0 transition-all duration-150 ${isConfirming ? 'text-vc-red' : 'text-vc-muted hover:text-vc-red'}`}
+                          style={{ background: isConfirming ? 'rgba(242,139,130,0.15)' : 'transparent' }}
                         >
                           <TrashIcon />
                         </button>

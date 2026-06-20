@@ -176,7 +176,7 @@ export default function AnimationRenderer({ code }) {
   if (!animationElement) return null;
 
   return (
-    <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+    <div className="w-full flex justify-center">
       {animationElement}
     </div>
   );

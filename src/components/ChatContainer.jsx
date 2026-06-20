@@ -23,10 +23,8 @@ export default function ChatContainer() {
   );
 
   const messagesEndRef = useRef(null);
-  // Track current session id across renders (mutable ref to avoid stale closures)
   const sessionIdRef = useRef(activeSessionId);
 
-  // When user switches session → load that session's messages into the hook
   useEffect(() => {
     if (activeSessionId !== sessionIdRef.current) {
       sessionIdRef.current = activeSessionId;
@@ -35,19 +33,16 @@ export default function ChatContainer() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeSessionId]);
 
-  // Auto-scroll on new messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Persist messages to history after every update
   useEffect(() => {
     if (messages.length === 0) return;
     const id = saveSession(sessionIdRef.current, messages);
     sessionIdRef.current = id;
   }, [messages, saveSession]);
 
-  // Wrap handleSubmit so the new session id gets tracked immediately
   function handleSubmit(prompt) {
     _handleSubmit(prompt);
   }
@@ -65,17 +60,7 @@ export default function ChatContainer() {
   const hasMessages = messages.length > 0;
 
   return (
-    <div
-      id="chat-container"
-      style={{
-        display: 'flex',
-        flexDirection: 'row',
-        height: '100vh',
-        width: '100%',
-        background: '#131314',
-        overflow: 'hidden',
-      }}
-    >
+    <div id="chat-container" className="flex flex-row h-screen w-full bg-vc-bg overflow-hidden">
       {/* ── Sidebar ── */}
       <Sidebar
         sessions={sessions}
@@ -86,54 +71,21 @@ export default function ChatContainer() {
       />
 
       {/* ── Main chat area ── */}
-      <div
-        style={{
-          flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          overflow: 'hidden',
-          minWidth: 0,
-        }}
-      >
-        {/* Header — status only (logo+name live in sidebar) */}
-        <header
-          style={{
-            padding: '12px 24px',
-            display: 'flex',
-            alignItems: 'center',
-            flexShrink: 0,
-            zIndex: 10,
-          }}
-        >
-          <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 6 }}>
+      <div className="flex-1 flex flex-col overflow-hidden min-w-0">
+        {/* Header — status indicator */}
+        <header className="px-6 py-3 flex items-center shrink-0 z-10">
+          <div className="ml-auto flex items-center gap-[6px]">
             <div
-              style={{
-                width: 7,
-                height: 7,
-                borderRadius: '50%',
-                background: isLoading ? '#f8c85b' : '#81c995',
-                boxShadow: isLoading
-                  ? '0 0 6px rgba(248,200,91,0.5)'
-                  : '0 0 6px rgba(129,201,149,0.5)',
-                transition: 'all 0.3s ease',
-              }}
+              className={`w-[7px] h-[7px] rounded-full transition-all duration-300 ${isLoading ? 'bg-vc-yellow shadow-glow-yellow' : 'bg-vc-green shadow-glow-green'}`}
             />
-            <span style={{ fontSize: 12, color: '#9aa0a6' }}>
+            <span className="text-[12px] text-vc-muted">
               {isLoading ? 'Generating…' : 'Ready'}
             </span>
           </div>
         </header>
 
         {/* Messages / Welcome area */}
-        <div
-          id="messages-area"
-          style={{
-            flex: 1,
-            overflowY: 'auto',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
+        <div id="messages-area" className="flex-1 overflow-y-auto flex flex-col">
           <AnimatePresence mode="wait">
             {hasMessages ? (
               <motion.div
@@ -141,15 +93,7 @@ export default function ChatContainer() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                style={{
-                  maxWidth: 1000,
-                  width: '100%',
-                  margin: '0 auto',
-                  padding: '24px 24px 8px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: 0,
-                }}
+                className="max-w-chat w-full mx-auto px-6 pt-6 pb-2 flex flex-col gap-0"
               >
                 {messages.map((msg) => (
                   <ChatMessage key={msg.id} message={msg} />
@@ -162,7 +106,7 @@ export default function ChatContainer() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                style={{ flex: 1, display: 'flex', flexDirection: 'column' }}
+                className="flex-1 flex flex-col"
               >
                 <WelcomeScreen onPromptClick={handleSubmit} />
               </motion.div>
