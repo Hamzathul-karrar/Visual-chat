@@ -68,7 +68,7 @@ export default function ChatMessage({ message, onRegenerateAnimation }) {
         </div>
 
         {/* Bubble content */}
-        <div className={isUser ? 'max-w-[70%] flex-none' : 'flex-1'}>
+        <div className={isUser ? 'max-w-[85%] md:max-w-[70%] flex-none' : 'flex-1 w-full min-w-0'}>
           {isUser ? (
             /* User pill bubble */
             <div

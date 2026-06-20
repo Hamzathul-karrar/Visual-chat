@@ -34,11 +34,11 @@ export default function ChatInput({ onSubmit, isLoading }) {
   const hasInput = input.trim().length > 0;
 
   return (
-    <div className="px-6 pb-5 pt-3 bg-vc-bg shrink-0">
+    <div className="px-4 sm:px-6 pb-5 pt-3 bg-vc-bg shrink-0">
       {/* Gemini-style pill input bar */}
       <form
         onSubmit={handleSubmit}
-        className="flex items-end gap-2 max-w-chat-input mx-auto bg-vc-surface border border-vc-line rounded-pill px-[22px] py-[10px] transition-all duration-200 focus-within:border-[rgba(138,180,248,0.4)] focus-within:shadow-focus-ring"
+        className="flex items-end gap-2 w-full max-w-chat-input mx-auto bg-vc-surface border border-vc-line rounded-pill px-[16px] sm:px-[22px] py-[8px] sm:py-[10px] transition-all duration-200 focus-within:border-[rgba(138,180,248,0.4)] focus-within:shadow-focus-ring"
       >
         <textarea
           ref={textareaRef}

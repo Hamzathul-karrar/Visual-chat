@@ -35,7 +35,7 @@ export default function WelcomeScreen({ onPromptClick }) {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="flex flex-col items-center justify-center flex-1 px-6 pt-12 pb-8 gap-0 max-w-welcome mx-auto w-full"
+      className="flex flex-col items-center justify-center flex-1 px-4 sm:px-6 pt-8 sm:pt-12 pb-8 gap-0 max-w-welcome mx-auto w-full"
     >
       {/* Logo */}
       <motion.div variants={itemVariants} className="mb-6">
@@ -68,7 +68,7 @@ export default function WelcomeScreen({ onPromptClick }) {
       {/* Prompt cards */}
       <motion.div
         variants={itemVariants}
-        className="grid grid-cols-2 gap-[10px] w-full max-w-prompts"
+        className="grid grid-cols-1 sm:grid-cols-2 gap-[10px] w-full max-w-prompts px-2 sm:px-0"
       >
         {SUGGESTED_PROMPTS.map((item) => (
           <motion.button

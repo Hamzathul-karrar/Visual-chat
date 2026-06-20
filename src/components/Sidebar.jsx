@@ -52,7 +52,7 @@ function groupByDate(sessions) {
   return groups;
 }
 
-export default function Sidebar({ sessions, activeSessionId, onNewChat, onLoadSession, onDeleteSession }) {
+export default function Sidebar({ sessions, activeSessionId, onNewChat, onLoadSession, onDeleteSession, mobileOpen, onCloseMobile }) {
   const [collapsed, setCollapsed] = useState(false);
   const [hoveredId, setHoveredId] = useState(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
@@ -77,16 +77,26 @@ export default function Sidebar({ sessions, activeSessionId, onNewChat, onLoadSe
     <motion.aside
       animate={{ width: sidebarWidth }}
       transition={{ duration: 0.25, ease: 'easeInOut' }}
-      className="h-screen bg-vc-sidebar border-r border-vc-line flex flex-col shrink-0 overflow-hidden relative z-20"
+      className={`h-screen bg-vc-sidebar border-r border-vc-line flex flex-col shrink-0 overflow-hidden z-30 absolute md:relative transition-transform duration-300 ${mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}
     >
       {/* Top: collapse toggle + logo */}
       <div className={`flex items-center gap-[10px] shrink-0 min-h-[56px] ${collapsed ? 'px-3 py-[14px]' : 'px-4 py-[14px]'}`}>
         <button
           onClick={() => setCollapsed((c) => !c)}
           title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-          className="bg-transparent border-none text-vc-muted cursor-pointer p-[6px] rounded-lg flex items-center justify-center shrink-0 transition-all duration-150 hover:bg-vc-hover hover:text-vc-primary"
+          className="hidden md:flex bg-transparent border-none text-vc-muted cursor-pointer p-[6px] rounded-lg items-center justify-center shrink-0 transition-all duration-150 hover:bg-vc-hover hover:text-vc-primary"
         >
           {collapsed ? <ChevronRight /> : <ChevronLeft />}
+        </button>
+        <button
+          onClick={onCloseMobile}
+          title="Close sidebar"
+          className="md:hidden bg-transparent border-none text-vc-muted cursor-pointer p-[6px] rounded-lg flex items-center justify-center shrink-0 transition-all duration-150 hover:bg-vc-hover hover:text-vc-primary"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
         </button>
 
         <AnimatePresence>
