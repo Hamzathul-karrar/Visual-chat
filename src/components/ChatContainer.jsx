@@ -69,15 +69,6 @@ export default function ChatContainer() {
           >
             Visual Chat
           </h1>
-          <p
-            style={{
-              margin: 0,
-              fontSize: 11,
-              color: '#475569',
-            }}
-          >
-            Powered by {provider === 'groq' ? 'Groq (Llama 3.3)' : 'Gemini'} · Live animations
-          </p>
         </div>
 
         {/* Provider selector & Status Indicator */}
@@ -89,53 +80,7 @@ export default function ChatContainer() {
             gap: 16,
           }}
         >
-          {/* Toggle */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              background: 'rgba(255, 255, 255, 0.03)',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              borderRadius: 8,
-              padding: 2,
-              gap: 2,
-            }}
-          >
-            <button
-              onClick={() => setProvider('gemini')}
-              disabled={isLoading}
-              style={{
-                background: provider === 'gemini' ? 'rgba(129, 140, 248, 0.15)' : 'transparent',
-                border: 'none',
-                borderRadius: 6,
-                color: provider === 'gemini' ? '#a5b4fc' : '#94a3b8',
-                padding: '4px 10px',
-                fontSize: 12,
-                fontWeight: 500,
-                cursor: isLoading ? 'not-allowed' : 'pointer',
-                transition: 'all 0.2s',
-              }}
-            >
-              Gemini
-            </button>
-            <button
-              onClick={() => setProvider('groq')}
-              disabled={isLoading}
-              style={{
-                background: provider === 'groq' ? 'rgba(129, 140, 248, 0.15)' : 'transparent',
-                border: 'none',
-                borderRadius: 6,
-                color: provider === 'groq' ? '#a5b4fc' : '#94a3b8',
-                padding: '4px 10px',
-                fontSize: 12,
-                fontWeight: 500,
-                cursor: isLoading ? 'not-allowed' : 'pointer',
-                transition: 'all 0.2s',
-              }}
-            >
-              Groq
-            </button>
-          </div>
+
 
           {/* Status */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>

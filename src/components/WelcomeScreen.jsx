@@ -7,20 +7,10 @@ const SUGGESTED_PROMPTS = [
     prompt: 'Explain bubble sort',
   },
   {
-    icon: '🔐',
-    title: 'JWT Authentication',
-    prompt: 'How does JWT auth work?',
-  },
-  {
-    icon: '🌳',
-    title: 'Binary Search Tree',
-    prompt: 'What is a binary search tree?',
-  },
-  {
-    icon: '⚡',
-    title: 'JS Promises',
-    prompt: 'Explain how promises work in JS',
-  },
+    icon: '🌌',
+    title: 'Blackhole formation',
+    prompt: 'Explain blackhole formation?',
+  }
 ];
 
 const containerVariants = {

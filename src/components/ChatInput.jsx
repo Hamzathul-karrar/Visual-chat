@@ -72,7 +72,7 @@ export default function ChatInput({ onSubmit, isLoading }) {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Ask anything... try 'explain bubble sort'"
+          placeholder="Ask anything..."
           disabled={isLoading}
           rows={1}
           style={{
@@ -156,7 +156,7 @@ export default function ChatInput({ onSubmit, isLoading }) {
           userSelect: 'none',
         }}
       >
-        Visual Chat uses Gemini AI · Animations may occasionally fail to render
+        Visual Chat uses LLMs · Animations may occasionally fail to render
       </p>
     </div>
   );

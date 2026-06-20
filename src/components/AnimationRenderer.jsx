@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import React from 'react';
 import { transform } from '@babel/standalone';
-import rough from 'roughjs';
+import { motion } from 'framer-motion';
 
 /**
  * Aggressively clean LLM output to extract just the JS expression.
@@ -22,13 +22,13 @@ function cleanLLMCode(raw) {
   code = code.replace(/(\(\s*\)\s*){2,}=>/g, '() =>');
 
   // Ensure code starts with the factory expression
-  const factoryMatch = code.match(/\(\s*(rough|motion)\s*,\s*React\s*\)/);
+  const factoryMatch = code.match(/\(\s*motion\s*,\s*React\s*\)/);
   if (factoryMatch) {
     code = code.substring(factoryMatch.index);
   }
 
   // Trim trailing text after the balanced closing brace
-  const isFactory = /^\(\s*(rough|motion)\s*,\s*React\s*\)/.test(code);
+  const isFactory = /^\(\s*motion\s*,\s*React\s*\)/.test(code);
   if (isFactory && !code.endsWith('null')) {
     const lastBrace = findBalancedEnd(code);
     if (lastBrace !== -1 && lastBrace < code.length - 1) {
@@ -137,15 +137,15 @@ export default function AnimationRenderer({ code }) {
       const jsCode = transformJSX(cleanCode);
       console.log('--- Babel output (first 300 chars):', jsCode.substring(0, 300));
 
-      // Step 2: Evaluate with new Function
+      // Step 2: Evaluate with new Function — inject motion + React
       const factory = new Function(
-        'rough',
+        'motion',
         'React',
         `"use strict"; return (${jsCode})`
       );
 
       // Step 3: Get the arrow function
-      const arrowFn = factory(rough, React);
+      const arrowFn = factory(motion, React);
 
       if (arrowFn === null) return null;
 
@@ -155,7 +155,7 @@ export default function AnimationRenderer({ code }) {
       }
 
       // Step 4: Call the arrow function to get the component
-      const Component = arrowFn(rough, React);
+      const Component = arrowFn(motion, React);
 
       if (Component === null) return null;
 
