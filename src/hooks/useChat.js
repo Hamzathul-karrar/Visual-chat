@@ -4,6 +4,9 @@ import { fetchBothResponses, fetchAnimationCode } from '../api/gemini';
 /**
  * Custom hook for managing chat state and LLM interactions.
  *
+ * Accepts optional initialMessages so the container can seed it with a
+ * restored session when switching conversations.
+ *
  * Message shape:
  * {
  *   id: string,
@@ -11,21 +14,17 @@ import { fetchBothResponses, fetchAnimationCode } from '../api/gemini';
  *   text: string,
  *   animationCode: string | null,
  *   isLoading: boolean,
+ *   isAnimationLoading: boolean,
  *   error: string | null,
  *   timestamp: Date
  * }
  */
-export default function useChat() {
-  const [messages, setMessages] = useState([]);
+export default function useChat(initialMessages = []) {
+  const [messages, setMessages] = useState(initialMessages);
   const [isLoading, setIsLoading] = useState(false);
-  const [provider, setProvider] = useState(() => {
+  const [provider] = useState(() => {
     return localStorage.getItem('chat-provider') || (import.meta.env.VITE_GROQ_API_KEY ? 'groq' : 'gemini');
   });
-
-  const changeProvider = useCallback((newProvider) => {
-    setProvider(newProvider);
-    localStorage.setItem('chat-provider', newProvider);
-  }, []);
 
   const handleSubmit = useCallback(async (prompt) => {
     if (!prompt.trim() || isLoading) return;
@@ -36,6 +35,7 @@ export default function useChat() {
       text: prompt.trim(),
       animationCode: null,
       isLoading: false,
+      isAnimationLoading: false,
       error: null,
       timestamp: new Date(),
     };
@@ -47,23 +47,20 @@ export default function useChat() {
       text: '',
       animationCode: null,
       isLoading: true,
+      isAnimationLoading: false,
       error: null,
       timestamp: new Date(),
     };
 
-    // Add both messages to state
     setMessages((prev) => [...prev, userMessage, assistantMessage]);
     setIsLoading(true);
 
     try {
-      // Parallel LLM calls
       const { text, animationCode } = await fetchBothResponses(prompt.trim(), provider);
 
-      // Debug: log raw LLM responses
       console.log('=== TEXT RESPONSE ===', text?.substring(0, 100));
       console.log('=== ANIMATION RESPONSE (raw) ===', animationCode);
 
-      // Check if animation code is null-like
       const cleanAnimation = animationCode?.trim();
       const isNullAnimation =
         !cleanAnimation ||
@@ -111,7 +108,6 @@ export default function useChat() {
     const msgIndex = messages.findIndex((m) => m.id === messageId);
     if (msgIndex === -1) return;
 
-    // Find the closest user prompt before this assistant message
     let userPrompt = '';
     for (let i = msgIndex - 1; i >= 0; i--) {
       if (messages[i].role === 'user') {
@@ -122,16 +118,10 @@ export default function useChat() {
 
     if (!userPrompt) return;
 
-    // Set message to loading state specifically for animation
     setMessages((prev) =>
       prev.map((msg) =>
         msg.id === messageId
-          ? {
-              ...msg,
-              animationCode: null,
-              isAnimationLoading: true,
-              error: null,
-            }
+          ? { ...msg, animationCode: null, isAnimationLoading: true, error: null }
           : msg
       )
     );
@@ -149,11 +139,7 @@ export default function useChat() {
       setMessages((prev) =>
         prev.map((msg) =>
           msg.id === messageId
-            ? {
-                ...msg,
-                animationCode: isNullAnimation ? null : code,
-                isAnimationLoading: false,
-              }
+            ? { ...msg, animationCode: isNullAnimation ? null : code, isAnimationLoading: false }
             : msg
         )
       );
@@ -162,16 +148,12 @@ export default function useChat() {
       setMessages((prev) =>
         prev.map((msg) =>
           msg.id === messageId
-            ? {
-                ...msg,
-                isAnimationLoading: false,
-                error: error.message || 'Failed to regenerate animation.',
-              }
+            ? { ...msg, isAnimationLoading: false, error: error.message || 'Failed to regenerate animation.' }
             : msg
         )
       );
     }
   }, [messages, provider]);
 
-  return { messages, isLoading, handleSubmit, regenerateAnimation, provider, setProvider: changeProvider };
+  return { messages, setMessages, isLoading, handleSubmit, regenerateAnimation, provider };
 }

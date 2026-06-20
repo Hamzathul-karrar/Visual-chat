@@ -49,7 +49,7 @@ export default function ChatInput({ onSubmit, isLoading }) {
           display: 'flex',
           alignItems: 'flex-end',
           gap: 8,
-          maxWidth: 768,
+          maxWidth: 750,
           margin: '0 auto',
           background: '#1e1f20',
           border: '1px solid #2d2e30',

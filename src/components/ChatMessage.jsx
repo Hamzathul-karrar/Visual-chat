@@ -240,7 +240,7 @@ export default function ChatMessage({ message, onRegenerateAnimation }) {
                         letterSpacing: '0.1em',
                       }}
                     >
-                      ⬡ Live Animation
+                      Live Animation
                     </span>
                   </div>
                   {message.isAnimationLoading ? (
