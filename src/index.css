@@ -1,8 +1,8 @@
 /* ============================================
-   Visual Chat — Global Styles
+   Visual Chat — Gemini-Inspired Global Styles
    ============================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&family=Google+Sans+Mono&display=swap');
 
 /* Reset */
 *,
@@ -20,10 +20,9 @@ html {
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    sans-serif;
-  background: #0a0a1a;
-  color: #e2e8f0;
+  font-family: 'Google Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #131314;
+  color: #e3e3e3;
   line-height: 1.6;
   overflow: hidden;
   height: 100vh;
@@ -38,13 +37,13 @@ body {
 
 /* Selection */
 ::selection {
-  background: rgba(129, 140, 248, 0.3);
-  color: #e2e8f0;
+  background: rgba(138, 180, 248, 0.25);
+  color: #e8eaed;
 }
 
 /* Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -52,29 +51,28 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.18);
 }
 
-/* Firefox scrollbar */
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.08) transparent;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
 }
 
-/* Placeholder styling */
+/* Placeholder */
 textarea::placeholder,
 input::placeholder {
-  color: #475569;
+  color: #9aa0a6;
 }
 
-/* Focus outlines */
+/* Focus */
 :focus-visible {
-  outline: 2px solid rgba(129, 140, 248, 0.5);
+  outline: 2px solid rgba(138, 180, 248, 0.6);
   outline-offset: 2px;
 }
 
@@ -83,22 +81,43 @@ input:focus {
   outline: none;
 }
 
-/* Links in markdown */
+/* Markdown typography */
 .markdown-content a {
-  color: #818cf8;
+  color: #8ab4f8;
   text-decoration: none;
-  border-bottom: 1px solid rgba(129, 140, 248, 0.3);
+  border-bottom: 1px solid rgba(138, 180, 248, 0.3);
   transition: all 0.2s ease;
 }
 
 .markdown-content a:hover {
-  color: #a5b4fc;
-  border-bottom-color: rgba(129, 140, 248, 0.6);
+  color: #aecbfa;
+  border-bottom-color: rgba(138, 180, 248, 0.6);
 }
 
-/* Prevent layout shift */
-img,
-svg {
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3 {
+  color: #e8eaed;
+  margin: 16px 0 8px;
+  font-weight: 600;
+}
+
+.markdown-content h1 { font-size: 1.4em; }
+.markdown-content h2 { font-size: 1.2em; }
+.markdown-content h3 { font-size: 1.05em; }
+
+/* Images */
+img {
   display: block;
   max-width: 100%;
+}
+
+svg {
+  display: block;
+}
+
+/* Prompt card shimmer animation */
+@keyframes shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
 }

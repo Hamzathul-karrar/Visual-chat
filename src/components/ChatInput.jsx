@@ -20,7 +20,6 @@ export default function ChatInput({ onSubmit, isLoading }) {
     if (!trimmed || isLoading) return;
     onSubmit(trimmed);
     setInput('');
-    // Reset height
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
     }
@@ -33,36 +32,39 @@ export default function ChatInput({ onSubmit, isLoading }) {
     }
   }
 
+  const hasInput = input.trim().length > 0;
+
   return (
     <div
       style={{
-        padding: '16px 20px',
-        borderTop: '1px solid rgba(255, 255, 255, 0.04)',
-        background: 'rgba(10, 10, 26, 0.8)',
-        backdropFilter: 'blur(20px)',
+        padding: '12px 24px 20px',
+        background: '#131314',
+        flexShrink: 0,
       }}
     >
+      {/* Gemini-style pill input bar */}
       <form
         onSubmit={handleSubmit}
         style={{
           display: 'flex',
           alignItems: 'flex-end',
-          gap: 12,
-          maxWidth: 900,
+          gap: 8,
+          maxWidth: 768,
           margin: '0 auto',
-          background: 'rgba(255, 255, 255, 0.04)',
-          border: '1px solid rgba(255, 255, 255, 0.08)',
-          borderRadius: 16,
-          padding: '10px 12px 10px 18px',
-          transition: 'border-color 0.25s ease',
+          background: '#1e1f20',
+          border: '1px solid #2d2e30',
+          borderRadius: 28,
+          padding: '10px 10px 10px 22px',
+          transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
         }}
         onFocus={(e) => {
-          e.currentTarget.style.borderColor = 'rgba(129, 140, 248, 0.3)';
+          e.currentTarget.style.borderColor = 'rgba(138, 180, 248, 0.4)';
+          e.currentTarget.style.boxShadow = '0 0 0 1px rgba(138, 180, 248, 0.15)';
         }}
         onBlur={(e) => {
-          // Only blur if focus leaves the form entirely
           if (!e.currentTarget.contains(e.relatedTarget)) {
-            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+            e.currentTarget.style.borderColor = '#2d2e30';
+            e.currentTarget.style.boxShadow = 'none';
           }
         }}
       >
@@ -80,59 +82,52 @@ export default function ChatInput({ onSubmit, isLoading }) {
             background: 'transparent',
             border: 'none',
             outline: 'none',
-            color: '#e2e8f0',
+            color: '#e3e3e3',
             fontSize: 15,
             fontFamily: 'inherit',
             resize: 'none',
-            lineHeight: 1.5,
-            padding: '6px 0',
+            lineHeight: 1.6,
+            padding: '4px 0',
             maxHeight: 160,
             opacity: isLoading ? 0.5 : 1,
           }}
         />
 
+        {/* Send button */}
         <motion.button
           type="submit"
-          disabled={!input.trim() || isLoading}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          disabled={!hasInput || isLoading}
+          whileHover={hasInput && !isLoading ? { scale: 1.08 } : {}}
+          whileTap={hasInput && !isLoading ? { scale: 0.93 } : {}}
           style={{
             width: 40,
             height: 40,
-            borderRadius: 12,
+            borderRadius: '50%',
             border: 'none',
-            background:
-              input.trim() && !isLoading
-                ? 'linear-gradient(135deg, #818cf8, #6366f1)'
-                : 'rgba(255, 255, 255, 0.06)',
-            color:
-              input.trim() && !isLoading ? '#fff' : '#475569',
-            cursor:
-              input.trim() && !isLoading ? 'pointer' : 'not-allowed',
+            background: hasInput && !isLoading
+              ? 'linear-gradient(135deg, #8ab4f8 0%, #c084fc 100%)'
+              : '#2d2e30',
+            color: hasInput && !isLoading ? '#131314' : '#5f6368',
+            cursor: hasInput && !isLoading ? 'pointer' : 'not-allowed',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: 18,
             flexShrink: 0,
-            transition: 'all 0.25s ease',
-            boxShadow:
-              input.trim() && !isLoading
-                ? '0 0 20px rgba(129, 140, 248, 0.25)'
-                : 'none',
+            transition: 'background 0.25s ease',
           }}
         >
           {isLoading ? (
             <motion.span
               animate={{ rotate: 360 }}
               transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-              style={{ display: 'inline-block', fontSize: 16 }}
+              style={{ display: 'inline-block', fontSize: 15 }}
             >
               ◌
             </motion.span>
           ) : (
             <svg
-              width="18"
-              height="18"
+              width="17"
+              height="17"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -150,19 +145,14 @@ export default function ChatInput({ onSubmit, isLoading }) {
       <p
         style={{
           textAlign: 'center',
-          color: '#334155',
+          color: '#5f6368',
           fontSize: 11,
-          margin: '10px 0 0',
+          margin: '8px 0 0',
           userSelect: 'none',
         }}
       >
-        Visual Chat uses LLMs · Animations may occasionally fail to render
+        Visual Chat can make mistakes. Visual animations may occasionally fail to render.
       </p>
     </div>
   );
 }
-
-/**
- * Imperatively submit a prompt (used by WelcomeScreen cards).
- * ChatContainer will call onSubmit directly for this.
- */

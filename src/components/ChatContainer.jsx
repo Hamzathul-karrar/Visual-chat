@@ -1,15 +1,15 @@
 import { useRef, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import ChatMessage from './ChatMessage';
 import ChatInput from './ChatInput';
 import WelcomeScreen from './WelcomeScreen';
+import VisualChatLogo from './VisualChatLogo';
 import useChat from '../hooks/useChat';
 
 export default function ChatContainer() {
-  const { messages, isLoading, handleSubmit, provider, setProvider } = useChat();
+  const { messages, isLoading, handleSubmit } = useChat();
   const messagesEndRef = useRef(null);
 
-  // Auto-scroll to bottom on new messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
@@ -24,86 +24,72 @@ export default function ChatContainer() {
         flexDirection: 'column',
         height: '100vh',
         width: '100%',
-        background: '#0a0a1a',
+        background: '#131314',
         overflow: 'hidden',
+        position: 'relative',
       }}
     >
-      {/* Header */}
+      {/* Header — Gemini style: minimal, no border, just logo + name */}
       <header
         style={{
-          padding: '14px 20px',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.04)',
+          padding: '12px 24px',
           display: 'flex',
           alignItems: 'center',
-          gap: 12,
+          gap: 10,
           flexShrink: 0,
-          background: 'rgba(10, 10, 26, 0.9)',
-          backdropFilter: 'blur(20px)',
           zIndex: 10,
         }}
       >
         <div
           style={{
-            width: 34,
-            height: 34,
-            borderRadius: 10,
-            background: 'linear-gradient(135deg, #818cf8, #6366f1)',
+            width: 32,
+            height: 32,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: 16,
-            boxShadow: '0 0 20px rgba(129, 140, 248, 0.2)',
           }}
         >
-          ✦
+          <VisualChatLogo size={32} />
         </div>
-        <div>
-          <h1
-            style={{
-              margin: 0,
-              fontSize: 16,
-              fontWeight: 600,
-              color: '#e2e8f0',
-              letterSpacing: '-0.01em',
-            }}
-          >
-            Visual Chat
-          </h1>
-        </div>
+        <span
+          style={{
+            fontSize: 18,
+            fontWeight: 500,
+            color: '#e3e3e3',
+            letterSpacing: '-0.01em',
+          }}
+        >
+          Visual Chat
+        </span>
 
-        {/* Provider selector & Status Indicator */}
+        {/* Status indicator — top right */}
         <div
           style={{
             marginLeft: 'auto',
             display: 'flex',
             alignItems: 'center',
-            gap: 16,
+            gap: 6,
           }}
         >
-
-
-          {/* Status */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <div
-              style={{
-                width: 7,
-                height: 7,
-                borderRadius: '50%',
-                background: isLoading ? '#f59e0b' : '#34d399',
-                boxShadow: isLoading
-                  ? '0 0 8px rgba(245, 158, 11, 0.4)'
-                  : '0 0 8px rgba(52, 211, 153, 0.4)',
-                transition: 'all 0.3s ease',
-              }}
-            />
-            <span style={{ fontSize: 11, color: '#475569' }}>
-              {isLoading ? 'Generating...' : 'Ready'}
-            </span>
-          </div>
+          <div
+            style={{
+              width: 7,
+              height: 7,
+              borderRadius: '50%',
+              background: isLoading ? '#f8c85b' : '#81c995',
+              boxShadow: isLoading
+                ? '0 0 6px rgba(248, 200, 91, 0.5)'
+                : '0 0 6px rgba(129, 201, 149, 0.5)',
+              transition: 'all 0.3s ease',
+            }}
+          />
+          <span style={{ fontSize: 12, color: '#9aa0a6' }}>
+            {isLoading ? 'Generating…' : 'Ready'}
+          </span>
         </div>
       </header>
 
-      {/* Messages area */}
+      {/* Messages / Welcome area */}
       <div
         id="messages-area"
         style={{
@@ -113,26 +99,28 @@ export default function ChatContainer() {
           flexDirection: 'column',
         }}
       >
-        {hasMessages ? (
-          <div
-            style={{
-              maxWidth: 900,
-              width: '100%',
-              margin: '0 auto',
-              padding: '24px 20px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 16,
-            }}
-          >
-            {messages.map((msg) => (
-              <ChatMessage key={msg.id} message={msg} />
-            ))}
-            <div ref={messagesEndRef} />
-          </div>
-        ) : (
-          <WelcomeScreen onPromptClick={handleSubmit} />
-        )}
+        <AnimatePresence mode="wait">
+          {hasMessages ? (
+            <div
+              style={{
+                maxWidth: 768,
+                width: '100%',
+                margin: '0 auto',
+                padding: '24px 24px 8px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 0,
+              }}
+            >
+              {messages.map((msg) => (
+                <ChatMessage key={msg.id} message={msg} />
+              ))}
+              <div ref={messagesEndRef} />
+            </div>
+          ) : (
+            <WelcomeScreen onPromptClick={handleSubmit} />
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Input area */}

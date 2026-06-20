@@ -1,29 +1,44 @@
 import { motion } from 'framer-motion';
+import VisualChatLogo from './VisualChatLogo';
 
 const SUGGESTED_PROMPTS = [
   {
     icon: '📊',
     title: 'Bubble Sort',
     prompt: 'Explain bubble sort',
+    desc: 'Visualize step-by-step sorting',
   },
   {
     icon: '🌌',
-    title: 'Blackhole formation',
+    title: 'Black Hole Formation',
     prompt: 'Explain blackhole formation?',
-  }
+    desc: 'How stars collapse into singularities',
+  },
+  {
+    icon: '⚡',
+    title: 'Neural Networks',
+    prompt: 'Explain how neural networks learn',
+    desc: 'Weights, layers, and backpropagation',
+  },
+  {
+    icon: '🔗',
+    title: 'Binary Search',
+    prompt: 'Explain binary search algorithm',
+    desc: 'Efficient lookup in sorted arrays',
+  },
 ];
 
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.1, delayChildren: 0.2 },
+    transition: { staggerChildren: 0.08, delayChildren: 0.1 },
   },
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
+  hidden: { opacity: 0, y: 16 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
 };
 
 export default function WelcomeScreen({ onPromptClick }) {
@@ -38,151 +53,116 @@ export default function WelcomeScreen({ onPromptClick }) {
         alignItems: 'center',
         justifyContent: 'center',
         flex: 1,
-        padding: '40px 20px',
-        gap: 32,
+        padding: '48px 24px 32px',
+        gap: 0,
+        maxWidth: 768,
+        margin: '0 auto',
+        width: '100%',
       }}
     >
-      {/* Logo / Icon */}
-      <motion.div
-        variants={itemVariants}
-        style={{
-          width: 72,
-          height: 72,
-          borderRadius: 20,
-          background: 'linear-gradient(135deg, #818cf8 0%, #6366f1 50%, #a78bfa 100%)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: 36,
-          boxShadow: '0 0 40px rgba(129, 140, 248, 0.3)',
-        }}
-      >
-        ✦
+      {/* Logo */}
+      <motion.div variants={itemVariants} style={{ marginBottom: 24 }}>
+        <VisualChatLogo size={72} />
       </motion.div>
 
       {/* Title */}
-      <motion.div
+      <motion.h1
         variants={itemVariants}
-        style={{ textAlign: 'center' }}
+        style={{
+          fontSize: 'clamp(26px, 4vw, 38px)',
+          fontWeight: 500,
+          margin: 0,
+          marginBottom: 14,
+          background: 'linear-gradient(90deg, #e3e3e3 0%, #8ab4f8 50%, #c084fc 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text',
+          textAlign: 'center',
+          lineHeight: 1.2,
+          letterSpacing: '-0.02em',
+        }}
       >
-        <h1
-          style={{
-            fontSize: 'clamp(28px, 5vw, 40px)',
-            fontWeight: 700,
-            margin: 0,
-            marginBottom: 12,
-            background: 'linear-gradient(135deg, #e2e8f0 0%, #818cf8 50%, #a78bfa 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-            lineHeight: 1.2,
-          }}
-        >
-          Visual Chat
-        </h1>
-        <p
-          style={{
-            fontSize: 16,
-            color: '#64748b',
-            margin: 0,
-            maxWidth: 440,
-            lineHeight: 1.6,
-          }}
-        >
-          Ask any technical question and get a visual explanation
-          with live animated illustrations
-        </p>
-      </motion.div>
+        Visual Chat
+      </motion.h1>
 
-      {/* Suggested prompts */}
+      {/* Subtitle */}
+      <motion.p
+        variants={itemVariants}
+        style={{
+          fontSize: 15,
+          color: '#9aa0a6',
+          margin: '0 0 40px',
+          maxWidth: 480,
+          lineHeight: 1.7,
+          textAlign: 'center',
+        }}
+      >
+        Ask any technical question and get a visual explanation
+        with live animated illustrations
+      </motion.p>
+
+      {/* Prompt cards — Gemini-style 2×2 grid */}
       <motion.div
         variants={itemVariants}
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-          gap: 12,
+          gridTemplateColumns: 'repeat(2, 1fr)',
+          gap: 10,
           width: '100%',
-          maxWidth: 520,
+          maxWidth: 600,
         }}
       >
         {SUGGESTED_PROMPTS.map((item) => (
           <motion.button
             key={item.title}
             onClick={() => onPromptClick(item.prompt)}
-            whileHover={{ scale: 1.02, y: -2 }}
-            whileTap={{ scale: 0.98 }}
+            whileHover={{ scale: 1.015, y: -1 }}
+            whileTap={{ scale: 0.985 }}
             style={{
-              background: 'rgba(255, 255, 255, 0.03)',
-              border: '1px solid rgba(255, 255, 255, 0.06)',
-              borderRadius: 14,
-              padding: '18px 16px',
+              background: '#1e1f20',
+              border: '1px solid #2d2e30',
+              borderRadius: 16,
+              padding: '16px 18px',
               cursor: 'pointer',
               textAlign: 'left',
-              transition: 'all 0.25s ease',
+              transition: 'background 0.2s ease, border-color 0.2s ease',
               display: 'flex',
-              alignItems: 'flex-start',
-              gap: 12,
+              flexDirection: 'column',
+              gap: 6,
+              minHeight: 90,
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(129, 140, 248, 0.08)';
-              e.currentTarget.style.borderColor = 'rgba(129, 140, 248, 0.2)';
+              e.currentTarget.style.background = '#28292a';
+              e.currentTarget.style.borderColor = '#3d3e40';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
-              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.06)';
+              e.currentTarget.style.background = '#1e1f20';
+              e.currentTarget.style.borderColor = '#2d2e30';
             }}
           >
-            <span style={{ fontSize: 22, lineHeight: 1 }}>{item.icon}</span>
-            <div>
-              <div
-                style={{
-                  color: '#e2e8f0',
-                  fontSize: 14,
-                  fontWeight: 600,
-                  marginBottom: 4,
-                }}
-              >
-                {item.title}
-              </div>
-              <div
-                style={{
-                  color: '#64748b',
-                  fontSize: 12,
-                  lineHeight: 1.4,
-                }}
-              >
-                {item.prompt}
-              </div>
+            <span style={{ fontSize: 20 }}>{item.icon}</span>
+            <div
+              style={{
+                color: '#e3e3e3',
+                fontSize: 13,
+                fontWeight: 500,
+                lineHeight: 1.4,
+              }}
+            >
+              {item.title}
+            </div>
+            <div
+              style={{
+                color: '#9aa0a6',
+                fontSize: 11.5,
+                lineHeight: 1.4,
+              }}
+            >
+              {item.desc}
             </div>
           </motion.button>
         ))}
       </motion.div>
-
-      {/* Hint */}
-      <motion.p
-        variants={itemVariants}
-        style={{
-          color: '#475569',
-          fontSize: 13,
-          margin: 0,
-          display: 'flex',
-          alignItems: 'center',
-          gap: 6,
-        }}
-      >
-        <span style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: 20,
-          height: 20,
-          borderRadius: 6,
-          background: 'rgba(255, 255, 255, 0.06)',
-          fontSize: 10,
-          color: '#64748b',
-        }}>↵</span>
-        Press Enter to send
-      </motion.p>
     </motion.div>
   );
 }
