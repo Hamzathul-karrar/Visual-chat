@@ -10,7 +10,7 @@ function AnimationSkeleton() {
       animate={{ opacity: [0.15, 0.35, 0.15] }}
       transition={{ duration: 2, repeat: Infinity }}
       style={{
-        height: 180,
+        height: 260,
         width: '100%',
         background: 'linear-gradient(135deg, rgba(138,180,248,0.04) 0%, rgba(192,132,252,0.06) 50%, rgba(138,180,248,0.04) 100%)',
         borderRadius: 16,

@@ -14,7 +14,7 @@ OUTPUT FORMAT — return exactly:
   return function AnimatedScene() {
     // snapshots, state, render
     return (
-      <div style={{ width: 600, height: 400, background: '#0d0d21', borderRadius: 12, position: 'relative', overflow: 'hidden', maxWidth: '100%', fontFamily: 'system-ui, sans-serif' }}>
+      <div style={{ width: 800, height: 500, background: '#0d0d21', borderRadius: 12, position: 'relative', overflow: 'hidden', maxWidth: '100%', fontFamily: 'system-ui, sans-serif' }}>
         {/* visualization */}
       </div>
     );
@@ -122,7 +122,7 @@ LOOPING: The setInterval + modulo (%) already loops forever. Never stop it.
 For decorative elements, use transition={{ repeat: Infinity }}.
 
 VISUALS:
-- Container: 600x400. USE THE FULL SPACE. Don't cram everything into a corner.
+- Container: 800x500. USE THE FULL SPACE. Don't cram everything into a corner.
 - Colors: #818cf8 (indigo), #34d399 (emerald), #f472b6 (pink), #fbbf24 (amber), #60a5fa (blue), #f87171 (red).
 - Glow: boxShadow: '0 0 20px rgba(99,102,241,0.5)'
 - Title at top showing what's being visualized.

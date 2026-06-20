@@ -142,7 +142,7 @@ export default function ChatContainer() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 style={{
-                  maxWidth: 768,
+                  maxWidth: 1000,
                   width: '100%',
                   margin: '0 auto',
                   padding: '24px 24px 8px',

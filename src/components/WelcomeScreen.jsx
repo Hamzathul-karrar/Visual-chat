@@ -13,19 +13,7 @@ const SUGGESTED_PROMPTS = [
     title: 'Black Hole Formation',
     prompt: 'Explain blackhole formation?',
     desc: 'How stars collapse into singularities',
-  },
-  {
-    icon: '⚡',
-    title: 'Neural Networks',
-    prompt: 'Explain how neural networks learn',
-    desc: 'Weights, layers, and backpropagation',
-  },
-  {
-    icon: '🔗',
-    title: 'Binary Search',
-    prompt: 'Explain binary search algorithm',
-    desc: 'Efficient lookup in sorted arrays',
-  },
+  }
 ];
 
 const containerVariants = {
@@ -91,7 +79,7 @@ export default function WelcomeScreen({ onPromptClick }) {
         style={{
           fontSize: 15,
           color: '#9aa0a6',
-          margin: '0 0 40px',
+          margin: '0 0 60px',
           maxWidth: 480,
           lineHeight: 1.7,
           textAlign: 'center',
@@ -130,6 +118,7 @@ export default function WelcomeScreen({ onPromptClick }) {
               flexDirection: 'column',
               gap: 6,
               minHeight: 90,
+              marginBottom: 80
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.background = '#28292a';
