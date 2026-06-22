@@ -77,7 +77,8 @@ export default function Sidebar({ sessions, activeSessionId, onNewChat, onLoadSe
     <motion.aside
       animate={{ width: sidebarWidth }}
       transition={{ duration: 0.25, ease: 'easeInOut' }}
-      className={`h-screen bg-vc-sidebar border-r border-vc-line flex flex-col shrink-0 overflow-hidden z-30 absolute md:relative transition-transform duration-300 ${mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}
+      style={{ height: '100dvh' }}
+      className={`bg-vc-sidebar border-r border-vc-line flex flex-col shrink-0 overflow-hidden z-30 absolute md:relative transition-transform duration-300 ${mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}
     >
       {/* Top: collapse toggle + logo */}
       <div className={`flex items-center gap-[10px] shrink-0 min-h-[56px] ${collapsed ? 'px-3 py-[14px]' : 'px-4 py-[14px]'}`}>

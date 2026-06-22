@@ -22,6 +22,7 @@ export default function ChatContainer() {
     activeSession?.messages ?? []
   );
 
+  const messagesAreaRef = useRef(null);
   const messagesEndRef = useRef(null);
   const sessionIdRef = useRef(activeSessionId);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
@@ -35,7 +36,10 @@ export default function ChatContainer() {
   }, [activeSessionId]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const area = messagesAreaRef.current;
+    if (area) {
+      area.scrollTo({ top: area.scrollHeight, behavior: 'smooth' });
+    }
   }, [messages]);
 
   useEffect(() => {
@@ -62,7 +66,7 @@ export default function ChatContainer() {
   const hasMessages = messages.length > 0;
 
   return (
-    <div id="chat-container" className="flex flex-row h-screen w-full bg-vc-bg overflow-hidden">
+    <div id="chat-container" className="flex flex-row w-full bg-vc-bg overflow-hidden" style={{ height: '100dvh' }}>
       {/* Mobile Backdrop */}
       {mobileSidebarOpen && (
         <div
@@ -108,7 +112,7 @@ export default function ChatContainer() {
         </header>
 
         {/* Messages / Welcome area */}
-        <div id="messages-area" className="flex-1 overflow-y-auto flex flex-col">
+        <div id="messages-area" ref={messagesAreaRef} className="flex-1 overflow-y-auto flex flex-col">
           <AnimatePresence mode="wait">
             {hasMessages ? (
               <motion.div
