@@ -85,7 +85,7 @@ export default function ChatContainer() {
       {/* ── Main chat area ── */}
       <div className="flex-1 flex flex-col overflow-hidden min-w-0">
         {/* Header — status indicator */}
-        <header className="px-4 sm:px-6 py-3 flex items-center shrink-0 z-10">
+        <header className="relative px-4 sm:px-6 py-3 flex items-center shrink-0 z-10">
           <button
             className="md:hidden p-2 -ml-2 mr-2 text-vc-muted hover:text-vc-primary transition-colors"
             onClick={() => setMobileSidebarOpen(true)}
