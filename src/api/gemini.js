@@ -118,10 +118,10 @@ async function callGroq(userPrompt, systemPrompt) {
  * Fetch a text explanation for the user's prompt.
  */
 export async function fetchExplanation(userPrompt, provider = 'gemini') {
-  return null;
-  // return provider === 'groq'
-  //   ? callGroq(userPrompt, EXPLANATION_SYSTEM_PROMPT)
-  //   : callGemini(userPrompt, EXPLANATION_SYSTEM_PROMPT);
+  // return null;
+  return provider === 'groq'
+    ? callGroq(userPrompt, EXPLANATION_SYSTEM_PROMPT)
+    : callGemini(userPrompt, EXPLANATION_SYSTEM_PROMPT);
 }
 
 /**

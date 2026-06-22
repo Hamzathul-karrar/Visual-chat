@@ -137,7 +137,7 @@ POSITIONING:
 - Use .map() with unique keys for lists.
 
 DECISION:
-Return (motion, React) => null for: simple definitions, factual lookups, opinions, greetings.
+Return (motion, React) => null for: simple definitions, factual lookups, opinions, greetings, gibberish, typos, meaningless letters and Vague inputs where a step-by-step visualization does not make sense or cannot be constructed.
 `;
 
 export const EXPLANATION_SYSTEM_PROMPT = `
