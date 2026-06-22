@@ -176,7 +176,7 @@ export default function AnimationRenderer({ code }) {
   if (!animationElement) return null;
 
   return (
-    <div className="w-full flex justify-center">
+    <div className="w-full max-w-full overflow-hidden flex justify-center">
       {animationElement}
     </div>
   );

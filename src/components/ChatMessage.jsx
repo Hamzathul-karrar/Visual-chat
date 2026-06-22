@@ -153,7 +153,7 @@ export default function ChatMessage({ message, onRegenerateAnimation }) {
                   {message.isAnimationLoading ? (
                     <AnimationSkeleton />
                   ) : (
-                    <div className="w-full overflow-x-auto rounded-2xl relative">
+                    <div className="w-full max-w-full overflow-hidden rounded-2xl relative">
                       <AnimationErrorBoundary
                         key={message.animationCode}
                         onRegenerate={
