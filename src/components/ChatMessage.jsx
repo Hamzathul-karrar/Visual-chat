@@ -27,7 +27,7 @@ function AnimationSkeleton() {
   );
 }
 
-function LoadingSkeleton() {
+function TextSkeleton() {
   return (
     <div className="flex flex-col gap-[10px]">
       {[80, 100, 55].map((width, i) => (
@@ -42,7 +42,6 @@ function LoadingSkeleton() {
           }}
         />
       ))}
-      <AnimationSkeleton />
     </div>
   );
 }
@@ -77,13 +76,8 @@ export default function ChatMessage({ message, onRegenerateAnimation }) {
             >
               {message.text}
             </div>
-          ) : message.isLoading ? (
-            /* Loading state */
-            <div className="py-1 min-w-[200px]">
-              <LoadingSkeleton />
-            </div>
           ) : (
-            /* Assistant response — Gemini-style inline */
+            /* Assistant response — text & animation load independently */
             <div className="flex flex-col gap-4 py-1">
               {/* Error */}
               {message.error && (
@@ -98,8 +92,10 @@ export default function ChatMessage({ message, onRegenerateAnimation }) {
                 </div>
               )}
 
-              {/* Text */}
-              {message.text && (
+              {/* Text — skeleton or content */}
+              {message.isLoading ? (
+                <TextSkeleton />
+              ) : message.text ? (
                 <div className="markdown-content text-[14.5px] text-vc-primary leading-[1.75]">
                   <ReactMarkdown
                     components={{
@@ -140,34 +136,39 @@ export default function ChatMessage({ message, onRegenerateAnimation }) {
                     {message.text}
                   </ReactMarkdown>
                 </div>
-              )}
+              ) : null}
 
-              {/* Animation block */}
-              {(message.animationCode || message.isAnimationLoading) && (
+              {/* Animation — skeleton or content */}
+              {message.isAnimationLoading ? (
                 <div className="border-t border-vc-line pt-[14px]">
                   <div className="flex items-center gap-[6px] mb-[10px]">
                     <span className="text-[10px] text-vc-blue uppercase font-semibold tracking-[0.1em]">
                       Live Animation
                     </span>
                   </div>
-                  {message.isAnimationLoading ? (
-                    <AnimationSkeleton />
-                  ) : (
-                    <div className="w-full max-w-full overflow-hidden rounded-2xl relative">
-                      <AnimationErrorBoundary
-                        key={message.animationCode}
-                        onRegenerate={
-                          onRegenerateAnimation
-                            ? () => onRegenerateAnimation(message.id)
-                            : undefined
-                        }
-                      >
-                        <AnimationRenderer code={message.animationCode} />
-                      </AnimationErrorBoundary>
-                    </div>
-                  )}
+                  <AnimationSkeleton />
                 </div>
-              )}
+              ) : message.animationCode ? (
+                <div className="border-t border-vc-line pt-[14px]">
+                  <div className="flex items-center gap-[6px] mb-[10px]">
+                    <span className="text-[10px] text-vc-blue uppercase font-semibold tracking-[0.1em]">
+                      Live Animation
+                    </span>
+                  </div>
+                  <div className="w-full max-w-full overflow-hidden rounded-2xl relative">
+                    <AnimationErrorBoundary
+                      key={message.animationCode}
+                      onRegenerate={
+                        onRegenerateAnimation
+                          ? () => onRegenerateAnimation(message.id)
+                          : undefined
+                      }
+                    >
+                      <AnimationRenderer code={message.animationCode} />
+                    </AnimationErrorBoundary>
+                  </div>
+                </div>
+              ) : null}
             </div>
           )}
         </div>

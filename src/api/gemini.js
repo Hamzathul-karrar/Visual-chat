@@ -4,7 +4,7 @@ import {
 } from '../prompts/systemPrompts';
 
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
-const GEMINI_MODEL = 'gemini-2.5-flash';
+const GEMINI_MODEL = 'gemini-3.5-flash';
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
 const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY;
@@ -116,34 +116,47 @@ async function callGroq(userPrompt, systemPrompt) {
 
 /**
  * Fetch a text explanation for the user's prompt.
+ * Always uses Groq (fast LLM for text explanations).
  */
-export async function fetchExplanation(userPrompt, provider = 'gemini') {
-  return null;
-  // return provider === 'groq'
-  //   ? callGroq(userPrompt, EXPLANATION_SYSTEM_PROMPT)
-  //   : callGemini(userPrompt, EXPLANATION_SYSTEM_PROMPT);
+export async function fetchExplanation(userPrompt) {
+  return callGroq(userPrompt, EXPLANATION_SYSTEM_PROMPT);
 }
 
 /**
  * Fetch animation code for the user's prompt.
+ * Always uses Gemini (best for complex code generation).
  */
-export async function fetchAnimationCode(userPrompt, provider = 'gemini') {
-  return provider === 'groq'
-    ? callGroq(userPrompt, ANIMATION_SYSTEM_PROMPT)
-    : callGemini(userPrompt, ANIMATION_SYSTEM_PROMPT);
+export async function fetchAnimationCode(userPrompt) {
+  return callGemini(userPrompt, ANIMATION_SYSTEM_PROMPT);
 }
 
 /**
- * Fetch both explanation and animation code sequentially.
+ * Fetch both explanation (Groq) and animation code (Gemini) in parallel.
+ * Uses Promise.allSettled so a failure in one doesn't block the other.
  */
-export async function fetchBothResponses(userPrompt, provider = 'gemini') {
-  const text = await fetchExplanation(userPrompt, provider);
+export async function fetchBothResponses(userPrompt) {
+  const [explanationResult, animationResult] = await Promise.allSettled([
+    fetchExplanation(userPrompt),
+    fetchAnimationCode(userPrompt),
+  ]);
 
-  // Delay to avoid hitting rate limits
-  const delayMs = provider === 'groq' ? 1000 : 1500;
-  await new Promise((resolve) => setTimeout(resolve, delayMs));
+  const text = explanationResult.status === 'fulfilled' ? explanationResult.value : null;
+  const animationCode = animationResult.status === 'fulfilled' ? animationResult.value : null;
 
-  const animationCode = await fetchAnimationCode(userPrompt, provider);
+  // Log any partial failures
+  if (explanationResult.status === 'rejected') {
+    console.warn('Explanation (Groq) failed:', explanationResult.reason?.message);
+  }
+  if (animationResult.status === 'rejected') {
+    console.warn('Animation (Gemini) failed:', animationResult.reason?.message);
+  }
+
+  // If BOTH failed, throw so the caller's catch block can show an error
+  if (!text && !animationCode) {
+    throw new Error(
+      `Both APIs failed. Groq: ${explanationResult.reason?.message || 'unknown'}. Gemini: ${animationResult.reason?.message || 'unknown'}.`
+    );
+  }
 
   return { text, animationCode };
 }

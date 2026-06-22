@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
-import { fetchBothResponses, fetchAnimationCode } from '../api/gemini';
+import { fetchExplanation, fetchAnimationCode } from '../api/gemini';
+// Explanation → Groq API, Animation → Gemini API (fired independently)
 
 /**
  * Custom hook for managing chat state and LLM interactions.
@@ -13,8 +14,8 @@ import { fetchBothResponses, fetchAnimationCode } from '../api/gemini';
  *   role: 'user' | 'assistant',
  *   text: string,
  *   animationCode: string | null,
- *   isLoading: boolean,
- *   isAnimationLoading: boolean,
+ *   isLoading: boolean,        // text explanation loading
+ *   isAnimationLoading: boolean, // animation code loading
  *   error: string | null,
  *   timestamp: Date
  * }
@@ -22,9 +23,17 @@ import { fetchBothResponses, fetchAnimationCode } from '../api/gemini';
 export default function useChat(initialMessages = []) {
   const [messages, setMessages] = useState(initialMessages);
   const [isLoading, setIsLoading] = useState(false);
-  const [provider] = useState(() => {
-    return localStorage.getItem('chat-provider') || (import.meta.env.VITE_GROQ_API_KEY ? 'groq' : 'gemini');
-  });
+
+  // Helper to check if animation code is a null/empty response
+  const isNullAnimationCode = (code) => {
+    const clean = code?.trim();
+    return (
+      !clean ||
+      clean === '(motion, React) => null' ||
+      clean === 'null' ||
+      !!clean.match(/^\(motion,\s*React\)\s*=>\s*null$/)
+    );
+  };
 
   const handleSubmit = useCallback(async (prompt) => {
     if (!prompt.trim() || isLoading) return;
@@ -46,8 +55,8 @@ export default function useChat(initialMessages = []) {
       role: 'assistant',
       text: '',
       animationCode: null,
-      isLoading: true,
-      isAnimationLoading: false,
+      isLoading: true,           // text skeleton
+      isAnimationLoading: true,  // animation skeleton
       error: null,
       timestamp: new Date(),
     };
@@ -55,54 +64,95 @@ export default function useChat(initialMessages = []) {
     setMessages((prev) => [...prev, userMessage, assistantMessage]);
     setIsLoading(true);
 
-    try {
-      const { text, animationCode } = await fetchBothResponses(prompt.trim(), provider);
+    const trimmedPrompt = prompt.trim();
 
-      console.log('=== TEXT RESPONSE ===', text?.substring(0, 100));
-      console.log('=== ANIMATION RESPONSE (raw) ===', animationCode);
+    // Fire both API calls independently — whichever finishes first updates the UI
+    const explanationPromise = fetchExplanation(trimmedPrompt)
+      .then((text) => {
+        console.log('=== TEXT RESPONSE ===', text?.substring(0, 100));
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg.id === assistantId
+              ? { ...msg, text: text || '', isLoading: false, timestamp: new Date() }
+              : msg
+          )
+        );
+        return { ok: true };
+      })
+      .catch((err) => {
+        console.warn('Explanation (Groq) failed:', err.message);
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg.id === assistantId
+              ? {
+                  ...msg,
+                  isLoading: false,
+                  error: (msg.error ? msg.error + ' ' : '') + 'Explanation unavailable.',
+                  timestamp: new Date(),
+                }
+              : msg
+          )
+        );
+        return { ok: false, error: err };
+      });
 
-      const cleanAnimation = animationCode?.trim();
-      const isNullAnimation =
-        !cleanAnimation ||
-        cleanAnimation === '(motion, React) => null' ||
-        cleanAnimation === 'null' ||
-        cleanAnimation.match(/^\(motion,\s*React\)\s*=>\s*null$/);
+    const animationPromise = fetchAnimationCode(trimmedPrompt)
+      .then((code) => {
+        console.log('=== ANIMATION RESPONSE (raw) ===', code);
+        const nullAnim = isNullAnimationCode(code);
+        console.log('=== isNullAnimation:', nullAnim, '===');
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg.id === assistantId
+              ? {
+                  ...msg,
+                  animationCode: nullAnim ? null : code,
+                  isAnimationLoading: false,
+                  timestamp: new Date(),
+                }
+              : msg
+          )
+        );
+        return { ok: true };
+      })
+      .catch((err) => {
+        console.warn('Animation (Gemini) failed:', err.message);
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg.id === assistantId
+              ? {
+                  ...msg,
+                  isAnimationLoading: false,
+                  error: (msg.error ? msg.error + ' ' : '') + 'Animation unavailable.',
+                  timestamp: new Date(),
+                }
+              : msg
+          )
+        );
+        return { ok: false, error: err };
+      });
 
-      console.log('=== isNullAnimation:', isNullAnimation, '===');
+    // Wait for both to settle before releasing the global loading lock
+    const [expResult, animResult] = await Promise.all([explanationPromise, animationPromise]);
 
+    // If both failed, set a combined error
+    if (!expResult.ok && !animResult.ok) {
       setMessages((prev) =>
         prev.map((msg) =>
           msg.id === assistantId
             ? {
                 ...msg,
-                text,
-                animationCode: isNullAnimation ? null : animationCode,
+                error: 'Both APIs failed. Please try again.',
                 isLoading: false,
-                timestamp: new Date(),
+                isAnimationLoading: false,
               }
             : msg
         )
       );
-    } catch (error) {
-      console.error('Chat error:', error);
-      setMessages((prev) =>
-        prev.map((msg) =>
-          msg.id === assistantId
-            ? {
-                ...msg,
-                text: '',
-                animationCode: null,
-                isLoading: false,
-                error: error.message || 'Something went wrong. Please try again.',
-                timestamp: new Date(),
-              }
-            : msg
-        )
-      );
-    } finally {
-      setIsLoading(false);
     }
-  }, [isLoading, provider]);
+
+    setIsLoading(false);
+  }, [isLoading]);
 
   const regenerateAnimation = useCallback(async (messageId) => {
     const msgIndex = messages.findIndex((m) => m.id === messageId);
@@ -127,7 +177,7 @@ export default function useChat(initialMessages = []) {
     );
 
     try {
-      const code = await fetchAnimationCode(userPrompt, provider);
+      const code = await fetchAnimationCode(userPrompt);
 
       const cleanAnimation = code?.trim();
       const isNullAnimation =
@@ -153,7 +203,7 @@ export default function useChat(initialMessages = []) {
         )
       );
     }
-  }, [messages, provider]);
+  }, [messages]);
 
-  return { messages, setMessages, isLoading, handleSubmit, regenerateAnimation, provider };
+  return { messages, setMessages, isLoading, handleSubmit, regenerateAnimation };
 }
