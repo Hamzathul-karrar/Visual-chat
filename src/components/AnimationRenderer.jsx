@@ -1,7 +1,11 @@
-import { useMemo } from 'react';
+import { useMemo, useRef, useState, useEffect, useCallback } from 'react';
 import React from 'react';
 import { transform } from '@babel/standalone';
 import { motion } from 'framer-motion';
+
+/** Fixed canvas dimensions the LLM targets */
+const CANVAS_W = 800;
+const CANVAS_H = 500;
 
 /**
  * Aggressively clean LLM output to extract just the JS expression.
@@ -115,6 +119,22 @@ function transformJSX(code) {
  * 4. Call the factory to get the component
  */
 export default function AnimationRenderer({ code }) {
+  const containerRef = useRef(null);
+  const [scale, setScale] = useState(1);
+
+  const updateScale = useCallback(() => {
+    if (!containerRef.current) return;
+    const w = containerRef.current.clientWidth;
+    setScale(Math.min(w / CANVAS_W, 1)); // never scale UP, only down
+  }, []);
+
+  useEffect(() => {
+    updateScale();
+    const ro = new ResizeObserver(updateScale);
+    if (containerRef.current) ro.observe(containerRef.current);
+    return () => ro.disconnect();
+  }, [updateScale]);
+
   const animationElement = useMemo(() => {
     if (!code) return null;
 
@@ -176,8 +196,21 @@ export default function AnimationRenderer({ code }) {
   if (!animationElement) return null;
 
   return (
-    <div className="w-full max-w-full overflow-hidden flex justify-center">
-      {animationElement}
+    <div
+      ref={containerRef}
+      className="w-full overflow-hidden rounded-2xl"
+      style={{ height: CANVAS_H * scale }}
+    >
+      <div
+        style={{
+          width: CANVAS_W,
+          height: CANVAS_H,
+          transformOrigin: 'top left',
+          transform: `scale(${scale})`,
+        }}
+      >
+        {animationElement}
+      </div>
     </div>
   );
 }

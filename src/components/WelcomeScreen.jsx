@@ -76,7 +76,7 @@ export default function WelcomeScreen({ onPromptClick }) {
             onClick={() => onPromptClick(item.prompt)}
             whileHover={{ scale: 1.015, y: -1 }}
             whileTap={{ scale: 0.985 }}
-            className="bg-vc-surface border border-vc-line rounded-2xl px-[18px] py-4 cursor-pointer text-left transition-colors duration-200 flex flex-col gap-[6px] min-h-[90px] mb-20 hover:bg-vc-hover hover:border-vc-lineHover"
+            className="bg-vc-surface border border-vc-line rounded-2xl px-[18px] py-4 cursor-pointer text-left transition-colors duration-200 flex flex-col gap-[6px] min-h-[90px] hover:bg-vc-hover hover:border-vc-lineHover"
           >
             <span className="text-[20px]">{item.icon}</span>
             <div className="text-vc-primary text-[13px] font-medium leading-[1.4]">
