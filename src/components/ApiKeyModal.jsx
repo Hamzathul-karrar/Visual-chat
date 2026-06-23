@@ -3,19 +3,19 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { PROVIDER_OPTIONS, DEFAULT_MODELS } from '../hooks/useApiConfig';
 
 const backdropVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1 },
+  hidden: (isMobile) => ({ opacity: 0, transition: { duration: isMobile ? 0 : 0.2 } }),
+  visible: (isMobile) => ({ opacity: 1, transition: { duration: isMobile ? 0 : 0.2 } }),
 };
 
 const modalVariants = {
-  hidden: { opacity: 0, scale: 0.92, y: 24 },
-  visible: {
+  hidden: (isMobile) => ({ opacity: 0, scale: isMobile ? 1 : 0.92, y: isMobile ? 0 : 24 }),
+  visible: (isMobile) => ({
     opacity: 1,
     scale: 1,
     y: 0,
-    transition: { type: 'spring', stiffness: 400, damping: 30 },
-  },
-  exit: { opacity: 0, scale: 0.92, y: 24, transition: { duration: 0.18 } },
+    transition: isMobile ? { duration: 0 } : { type: 'spring', stiffness: 400, damping: 30 },
+  }),
+  exit: (isMobile) => ({ opacity: 0, scale: isMobile ? 1 : 0.92, y: isMobile ? 0 : 24, transition: { duration: isMobile ? 0 : 0.18 } }),
 };
 
 /* ── Reusable small components ── */
@@ -125,6 +125,14 @@ export default function ApiKeyModal({ isOpen, onClose, config, updateConfig }) {
 
   const [keyVisibility, setKeyVisibility] = useState({ text: false, animation: false });
   const [saved, setSaved] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 640);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Sync draft from config whenever modal opens
   useEffect(() => {
@@ -171,6 +179,7 @@ export default function ApiKeyModal({ isOpen, onClose, config, updateConfig }) {
         <motion.div
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
           variants={backdropVariants}
+          custom={isMobile}
           initial="hidden"
           animate="visible"
           exit="hidden"
@@ -184,6 +193,7 @@ export default function ApiKeyModal({ isOpen, onClose, config, updateConfig }) {
           {/* Modal */}
           <motion.div
             variants={modalVariants}
+            custom={isMobile}
             initial="hidden"
             animate="visible"
             exit="exit"
