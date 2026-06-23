@@ -117,16 +117,14 @@ export default function ChatContainer() {
               className="flex items-center justify-center w-8 h-8 rounded-lg text-vc-faint hover:text-vc-blue transition-all duration-200"
               style={{
                 background: 'none',
-                border: '1px solid transparent',
+                border: '1px solid rgba(138,180,248,0.5)',
                 cursor: 'pointer',
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.background = 'rgba(138,180,248,0.08)';
-                e.currentTarget.style.borderColor = 'rgba(138,180,248,0.15)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = 'none';
-                e.currentTarget.style.borderColor = 'transparent';
               }}
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
