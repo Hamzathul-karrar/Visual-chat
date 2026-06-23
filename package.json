@@ -17,6 +17,7 @@
     "react-dom": "^19.2.6",
     "react-error-boundary": "^6.1.2",
     "react-markdown": "^10.1.0",
+    "react-router-dom": "^7.18.0",
     "sucrase": "^3.35.1"
   },
   "devDependencies": {

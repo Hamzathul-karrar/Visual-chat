@@ -2,7 +2,7 @@
    Visual Chat — Gemini-Inspired Global Styles
    ============================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&family=Google+Sans+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -24,19 +24,17 @@ html {
 }
 
 body {
-  font-family: 'Google Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Inter', Arial, ui-sans-serif, system-ui;
   background: #131314;
   color: #e3e3e3;
-  line-height: 1.6;
-  overflow: hidden;
-  height: 100vh;
+  line-height: 1.5;
+  min-height: 100vh;
   width: 100vw;
 }
 
 #root {
-  height: 100vh;
+  min-height: 100vh;
   width: 100vw;
-  overflow: hidden;
 }
 
 /* ── Selection ── */
@@ -115,12 +113,25 @@ svg {
   font-weight: 600;
 }
 
-.markdown-content h1 { font-size: 1.4em; }
-.markdown-content h2 { font-size: 1.2em; }
-.markdown-content h3 { font-size: 1.05em; }
+.markdown-content h1 {
+  font-size: 1.4em;
+}
+
+.markdown-content h2 {
+  font-size: 1.2em;
+}
+
+.markdown-content h3 {
+  font-size: 1.05em;
+}
 
 /* ── Shimmer animation ── */
 @keyframes shimmer {
-  0%   { background-position: -400px 0; }
-  100% { background-position:  400px 0; }
+  0% {
+    background-position: -400px 0;
+  }
+
+  100% {
+    background-position: 400px 0;
+  }
 }
