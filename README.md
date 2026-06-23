@@ -1,6 +1,5 @@
-<![CDATA[<div align="center">
 
-# 🎨 Visual Chat
+# Visual Chat
 
 **AI-Powered Visual Learning — Ask any question, get animated explanations**
 
@@ -324,15 +323,8 @@ The app uses a custom **Gemini-inspired dark theme** defined in `tailwind.config
 
 ---
 
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
----
-
 <div align="center">
 
 **Built with ❤️ by [Hamzathul Karrar](https://github.com/Hamzathul-karrar)**
 
 </div>
-]]>
