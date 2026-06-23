@@ -1,12 +1,15 @@
 import { useState, useCallback } from 'react';
 import { fetchExplanation, fetchAnimationCode } from '../api/gemini';
-// Explanation → Groq API, Animation → Gemini API (fired independently)
+// Explanation and Animation use dynamically-configured providers via apiConfig
 
 /**
  * Custom hook for managing chat state and LLM interactions.
  *
  * Accepts optional initialMessages so the container can seed it with a
  * restored session when switching conversations.
+ *
+ * @param {Array} initialMessages - Previous messages to restore
+ * @param {{ getTextConfig: object, getAnimationConfig: object }} apiConfig - API provider configuration
  *
  * Message shape:
  * {
@@ -20,7 +23,7 @@ import { fetchExplanation, fetchAnimationCode } from '../api/gemini';
  *   timestamp: Date
  * }
  */
-export default function useChat(initialMessages = []) {
+export default function useChat(initialMessages = [], apiConfig = null) {
   const [messages, setMessages] = useState(initialMessages);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -66,8 +69,12 @@ export default function useChat(initialMessages = []) {
 
     const trimmedPrompt = prompt.trim();
 
+    // Get current provider configs
+    const textConfig = apiConfig?.getTextConfig;
+    const animConfig = apiConfig?.getAnimationConfig;
+
     // Fire both API calls independently — whichever finishes first updates the UI
-    const explanationPromise = fetchExplanation(trimmedPrompt)
+    const explanationPromise = fetchExplanation(trimmedPrompt, textConfig)
       .then((text) => {
         console.log('=== TEXT RESPONSE ===', text?.substring(0, 100));
         setMessages((prev) =>
@@ -80,7 +87,7 @@ export default function useChat(initialMessages = []) {
         return { ok: true };
       })
       .catch((err) => {
-        console.warn('Explanation (Groq) failed:', err.message);
+        console.warn('Explanation failed:', err.message);
         setMessages((prev) =>
           prev.map((msg) =>
             msg.id === assistantId
@@ -96,7 +103,7 @@ export default function useChat(initialMessages = []) {
         return { ok: false, error: err };
       });
 
-    const animationPromise = fetchAnimationCode(trimmedPrompt)
+    const animationPromise = fetchAnimationCode(trimmedPrompt, animConfig)
       .then((code) => {
         console.log('=== ANIMATION RESPONSE (raw) ===', code);
         const nullAnim = isNullAnimationCode(code);
@@ -116,7 +123,7 @@ export default function useChat(initialMessages = []) {
         return { ok: true };
       })
       .catch((err) => {
-        console.warn('Animation (Gemini) failed:', err.message);
+        console.warn('Animation failed:', err.message);
         setMessages((prev) =>
           prev.map((msg) =>
             msg.id === assistantId
@@ -152,7 +159,7 @@ export default function useChat(initialMessages = []) {
     }
 
     setIsLoading(false);
-  }, [isLoading]);
+  }, [isLoading, apiConfig]);
 
   const regenerateAnimation = useCallback(async (messageId) => {
     const msgIndex = messages.findIndex((m) => m.id === messageId);
@@ -177,7 +184,8 @@ export default function useChat(initialMessages = []) {
     );
 
     try {
-      const code = await fetchAnimationCode(userPrompt);
+      const animConfig = apiConfig?.getAnimationConfig;
+      const code = await fetchAnimationCode(userPrompt, animConfig);
 
       const cleanAnimation = code?.trim();
       const isNullAnimation =
@@ -203,7 +211,7 @@ export default function useChat(initialMessages = []) {
         )
       );
     }
-  }, [messages]);
+  }, [messages, apiConfig]);
 
   return { messages, setMessages, isLoading, handleSubmit, regenerateAnimation };
 }

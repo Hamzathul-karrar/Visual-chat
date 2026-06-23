@@ -51,6 +51,7 @@ export default {
       boxShadow: {
         'glow-green':  '0 0 6px rgba(129,201,149,0.5)',
         'glow-yellow': '0 0 6px rgba(248,200,91,0.5)',
+        'glow-red':    '0 0 6px rgba(242,139,130,0.5)',
         'focus-ring':  '0 0 0 1px rgba(138, 180, 248, 0.15)',
       },
       keyframes: {
