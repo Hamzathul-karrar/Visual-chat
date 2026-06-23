@@ -25,8 +25,7 @@ function VisibilityToggle({ visible, onClick }) {
     <button
       type="button"
       onClick={onClick}
-      className="absolute right-3 top-1/2 -translate-y-1/2 text-vc-faint hover:text-vc-muted transition-colors"
-      style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4 }}
+      className="absolute right-3 top-1/2 -translate-y-1/2 text-vc-faint hover:text-vc-muted transition-colors bg-transparent border-none cursor-pointer p-1"
       title={visible ? 'Hide key' : 'Show key'}
     >
       {visible ? (
@@ -45,20 +44,8 @@ function VisibilityToggle({ visible, onClick }) {
   );
 }
 
-/** Shared input styles */
-const inputStyle = {
-  background: 'rgba(19,19,20,0.6)',
-  border: '1px solid rgba(255,255,255,0.08)',
-  outline: 'none',
-  transition: 'border-color 0.2s',
-};
-
-function focusBorder(e) {
-  e.target.style.borderColor = 'rgba(138,180,248,0.4)';
-}
-function blurBorder(e) {
-  e.target.style.borderColor = 'rgba(255,255,255,0.08)';
-}
+/** Shared input class string */
+const inputClasses = "bg-[#131314]/60 border border-white/10 outline-none transition-colors duration-200 focus:border-vc-blue/40";
 
 /** A single task section: provider + model + api key */
 function TaskSection({ title, icon, draft, onFieldChange, keyVisible, onToggleKey, disabled }) {
@@ -81,18 +68,10 @@ function TaskSection({ title, icon, draft, onFieldChange, keyVisible, onToggleKe
           <select
             value={draft.provider}
             onChange={(e) => onFieldChange('provider', e.target.value)}
-            className="w-full rounded-xl px-3 py-2.5 text-[13px] text-vc-primary appearance-none"
+            className={`w-full rounded-xl px-3 py-2.5 pr-8 text-[13px] text-vc-primary appearance-none bg-no-repeat bg-[right_10px_center] ${inputClasses} ${disabled ? 'cursor-not-allowed pointer-events-none' : 'cursor-pointer'}`}
             style={{
-              ...inputStyle,
               backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239aa0a6' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`,
-              backgroundRepeat: 'no-repeat',
-              backgroundPosition: 'right 10px center',
-              paddingRight: '32px',
-              cursor: disabled ? 'not-allowed' : 'pointer',
-              pointerEvents: disabled ? 'none' : 'auto',
             }}
-            onFocus={focusBorder}
-            onBlur={blurBorder}
             disabled={disabled}
           >
             {PROVIDER_OPTIONS.map((p) => (
@@ -110,14 +89,7 @@ function TaskSection({ title, icon, draft, onFieldChange, keyVisible, onToggleKe
             value={draft.model}
             onChange={(e) => onFieldChange('model', e.target.value)}
             placeholder="e.g. gemini-2.5-flash"
-            className="w-full rounded-xl px-3 py-2.5 text-[13px] text-vc-primary"
-            style={{
-              ...inputStyle,
-              cursor: disabled ? 'not-allowed' : 'text',
-              pointerEvents: disabled ? 'none' : 'auto',
-            }}
-            onFocus={focusBorder}
-            onBlur={blurBorder}
+            className={`w-full rounded-xl px-3 py-2.5 text-[13px] text-vc-primary ${inputClasses} ${disabled ? 'cursor-not-allowed pointer-events-none' : 'cursor-text'}`}
             disabled={disabled}
           />
         </div>
@@ -132,14 +104,7 @@ function TaskSection({ title, icon, draft, onFieldChange, keyVisible, onToggleKe
             value={draft.apiKey}
             onChange={(e) => onFieldChange('apiKey', e.target.value)}
             placeholder={`Enter ${PROVIDER_OPTIONS.find((p) => p.id === draft.provider)?.label || ''} API key`}
-            className="w-full rounded-xl px-3.5 py-2.5 text-[13px] text-vc-primary pr-10"
-            style={{
-              ...inputStyle,
-              cursor: disabled ? 'not-allowed' : 'text',
-              pointerEvents: disabled ? 'none' : 'auto',
-            }}
-            onFocus={focusBorder}
-            onBlur={blurBorder}
+            className={`w-full rounded-xl px-3.5 py-2.5 pr-10 text-[13px] text-vc-primary ${inputClasses} ${disabled ? 'cursor-not-allowed pointer-events-none' : 'cursor-text'}`}
             disabled={disabled}
           />
           {!disabled && <VisibilityToggle visible={keyVisible} onClick={onToggleKey} />}
@@ -212,8 +177,7 @@ export default function ApiKeyModal({ isOpen, onClose, config, updateConfig }) {
         >
           {/* Backdrop */}
           <motion.div
-            className="absolute inset-0"
-            style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)' }}
+            className="absolute inset-0 bg-black/70 sm:bg-black/60 sm:backdrop-blur-sm"
             onClick={onClose}
           />
 
@@ -223,25 +187,13 @@ export default function ApiKeyModal({ isOpen, onClose, config, updateConfig }) {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="relative w-full max-w-lg rounded-2xl overflow-hidden"
-            style={{
-              background: 'linear-gradient(145deg, rgba(30,31,32,0.97) 0%, rgba(26,26,27,0.98) 100%)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              boxShadow: '0 24px 80px rgba(0,0,0,0.5), 0 0 1px rgba(255,255,255,0.1)',
-              maxHeight: '90vh',
-              overflowY: 'auto',
-            }}
+            className="relative w-full max-w-lg rounded-2xl overflow-hidden bg-[linear-gradient(145deg,rgba(30,31,32,0.97)_0%,rgba(26,26,27,0.98)_100%)] border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)] max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             {/* ── Header ── */}
             <div className="flex items-center justify-between px-6 pt-5 pb-1">
               <div className="flex items-center gap-3">
-                <div
-                  className="flex items-center justify-center w-9 h-9 rounded-xl"
-                  style={{
-                    background: 'linear-gradient(135deg, rgba(138,180,248,0.15), rgba(192,132,252,0.15))',
-                  }}
-                >
+                <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-vc-blue/15 to-vc-purple/15">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8ab4f8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4" />
                   </svg>
@@ -280,7 +232,7 @@ export default function ApiKeyModal({ isOpen, onClose, config, updateConfig }) {
               />
 
               {/* Divider */}
-              <div style={{ height: 1, background: 'rgba(255,255,255,0.06)' }} />
+              <div className="h-[1px] bg-white/5" />
 
               {/* ── Animation Output Section ── */}
               <TaskSection
@@ -304,15 +256,11 @@ export default function ApiKeyModal({ isOpen, onClose, config, updateConfig }) {
                 style={{ marginTop: -4 }}
               >
                 <div
-                  className="relative flex items-center justify-center w-[18px] h-[18px] rounded-md transition-all duration-200"
-                  style={{
-                    background: draft.useSameKey
-                      ? 'linear-gradient(135deg, #8ab4f8, #c084fc)'
-                      : 'rgba(19,19,20,0.6)',
-                    border: draft.useSameKey
-                      ? '1px solid rgba(138,180,248,0.5)'
-                      : '1px solid rgba(255,255,255,0.12)',
-                  }}
+                  className={`relative flex items-center justify-center w-[18px] h-[18px] rounded-md transition-all duration-200 border ${
+                    draft.useSameKey
+                      ? 'bg-gradient-to-br from-vc-blue to-vc-purple border-vc-blue/50'
+                      : 'bg-[#131314]/60 border-white/10'
+                  }`}
                 >
                   <input
                     type="checkbox"
@@ -347,17 +295,11 @@ export default function ApiKeyModal({ isOpen, onClose, config, updateConfig }) {
                 onClick={handleSave}
                 whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full rounded-xl py-2.5 text-[14px] font-medium transition-all duration-200 mt-1"
-                style={{
-                  background: saved
-                    ? 'linear-gradient(135deg, rgba(129,201,149,0.25), rgba(52,211,153,0.15))'
-                    : 'linear-gradient(135deg, rgba(138,180,248,0.2), rgba(192,132,252,0.15))',
-                  border: saved
-                    ? '1px solid rgba(129,201,149,0.3)'
-                    : '1px solid rgba(138,180,248,0.2)',
-                  color: saved ? '#81c995' : '#8ab4f8',
-                  cursor: 'pointer',
-                }}
+                className={`w-full rounded-xl py-2.5 text-[14px] font-medium transition-all duration-200 mt-1 border cursor-pointer ${
+                  saved
+                    ? 'bg-gradient-to-br from-vc-green/25 to-emerald-400/15 border-vc-green/30 text-vc-green'
+                    : 'bg-gradient-to-br from-vc-blue/20 to-vc-purple/15 border-vc-blue/20 text-vc-blue'
+                }`}
               >
                 Save
               </motion.button>
