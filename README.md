@@ -1,14 +1,14 @@
 
 # Visual Chat
 
-**AI-Powered Visual Learning — Ask any question, get animated explanations**
+**AI-Powered Visual Learning. Ask any question, get animated explanations**
 
 [![React](https://img.shields.io/badge/React-19.2-61DAFB?logo=react&logoColor=white)](https://react.dev)
 [![Vite](https://img.shields.io/badge/Vite-8.0-646CFF?logo=vite&logoColor=white)](https://vite.dev)
 [![Framer Motion](https://img.shields.io/badge/Framer_Motion-12.40-FF0066?logo=framer&logoColor=white)](https://www.framer.com/motion/)
 [![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 
-Visual Chat is an AI-powered chatbot that goes beyond text — it generates **live, animated visualizations** for technical concepts in real time. Ask about sorting algorithms, network protocols, data structures, or any concept, and watch it come alive with smooth Framer Motion animations.
+Visual Chat is an AI-powered chatbot that goes beyond text. It generates **live, animated visualizations** for technical concepts in real time. Ask about sorting algorithms, network protocols, data structures, or any concept, and watch it come alive with smooth Framer Motion animations.
 
 </div>
 
@@ -24,7 +24,6 @@ Visual Chat is an AI-powered chatbot that goes beyond text — it generates **li
 - **📱 Fully Responsive** — Optimized for desktop and mobile with collapsible sidebar and adaptive scaling
 - **🌙 Dark Mode UI** — Gemini-inspired dark theme with Google Sans typography
 - **⚡ Real-Time Status** — Live status indicator showing API readiness, loading state, or missing keys
-- **🔄 Animation Regeneration** — Retry animation generation without resending the text query
 - **🛡️ Error Boundaries** — Graceful fallback UI when AI-generated animations fail to render
 - **🎯 Suggested Prompts** — Welcome screen with curated starter prompts for quick exploration
 
@@ -93,58 +92,7 @@ User Question
 | **Markdown**       | [react-markdown](https://github.com/remarkjs/react-markdown) for text rendering |
 | **JSX Transform**  | [@babel/standalone](https://babeljs.io/docs/babel-standalone) for in-browser JSX compilation |
 | **Error Handling** | [react-error-boundary](https://github.com/bvaughn/react-error-boundary)   |
-| **AI Providers**   | Google Gemini API, Groq API, OpenRouter API                                |
-
----
-
-## 📁 Project Structure
-
-```
-Visual-chat/
-├── public/
-│   ├── favicon.svg          # Browser favicon
-│   ├── icons.svg            # SVG icon sprite
-│   └── logo.png             # App logo
-│
-├── src/
-│   ├── api/
-│   │   └── gemini.js         # Multi-provider API layer (Gemini, Groq, OpenRouter)
-│   │
-│   ├── assets/
-│   │   └── logo.png          # Logo used in components
-│   │
-│   ├── components/
-│   │   ├── AnimationErrorBoundary.jsx  # Error boundary for failed animations
-│   │   ├── AnimationRenderer.jsx       # LLM code → live React component pipeline
-│   │   ├── ApiKeyModal.jsx             # Settings modal for API configuration
-│   │   ├── ChatContainer.jsx           # Main layout orchestrator
-│   │   ├── ChatInput.jsx               # Auto-resizing textarea with send button
-│   │   ├── ChatMessage.jsx             # Message bubble with markdown + animation
-│   │   ├── Sidebar.jsx                 # Collapsible sidebar with chat history
-│   │   ├── VisualChatLogo.jsx          # Reusable logo component
-│   │   └── WelcomeScreen.jsx           # Landing screen with suggested prompts
-│   │
-│   ├── hooks/
-│   │   ├── useApiConfig.js   # Multi-provider API key management (localStorage)
-│   │   ├── useChat.js        # Chat state, message handling, parallel API calls
-│   │   └── useChatHistory.js # Session persistence & management (localStorage)
-│   │
-│   ├── prompts/
-│   │   └── systemPrompts.js  # System prompts for text & animation generation
-│   │
-│   ├── App.jsx               # Root component
-│   ├── index.css             # Global styles, resets, scrollbar, typography
-│   └── main.jsx              # React DOM entry point
-│
-├── .env                      
-├── .gitignore
-├── eslint.config.js
-├── index.html                # HTML shell with SEO meta tags
-├── package.json
-├── postcss.config.cjs
-├── tailwind.config.js        # Custom Gemini-inspired design tokens
-└── vite.config.js
-```
+| **AI Providers**   | Google Gemini API, Groq API, OpenRouter API                                | 
 
 ---
 
