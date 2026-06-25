@@ -8,7 +8,11 @@
 [![Framer Motion](https://img.shields.io/badge/Framer_Motion-12.40-FF0066?logo=framer&logoColor=white)](https://www.framer.com/motion/)
 [![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 
-Visual Chat is an AI-powered chatbot that goes beyond text. It generates **live, animated visualizations** for technical concepts in real time. Ask about sorting algorithms, network protocols, data structures, or any concept, and watch it come alive with smooth Framer Motion animations.
+Visual Chat is an AI-powered chatbot that goes beyond text. It generates **live, animated visualizations** for technical concepts in real time. Ask about sorting algorithms, network protocols, data structures, physics concepts, and more — and watch as it draws them for you.
+
+<div align="center">
+
+[![Try Visual Chat](https://img.shields.io/badge/Try%20Visual%20Chat-Visit%20Live%20App-8ab4f8?style=for-the-badge)](https://visual-chat.netlify.app/)
 
 </div>
 
@@ -186,7 +190,7 @@ Enable the **"Use same API key for both"** checkbox in settings to use one provi
 The root layout component. Orchestrates the sidebar, header (with API status indicator), message area, input bar, and API settings modal. Manages session switching and message persistence.
 
 ### `ChatMessage`
-Renders individual chat messages. User messages appear as pill-shaped bubbles; assistant messages render markdown text and live animations side by side. Includes loading skeletons for both text and animation.
+Renders individual chat messages. User messages appear as pill-shaped bubbles; assistant messages render markdown text and live animations side by side. Includes loading skeletons for both text and animation sections.
 
 ### `AnimationRenderer`
 The core animation pipeline:
@@ -300,6 +304,8 @@ The app uses a custom **Gemini-inspired dark theme** defined in `tailwind.config
 ---
 
 <div align="center">
+
+[![Try Visual Chat](https://img.shields.io/badge/Try%20Visual%20Chat-Visit%20Live%20App-8ab4f8?style=for-the-badge)](https://visual-chat.netlify.app/)
 
 **Built with ❤️ by [Hamzathul Karrar](https://github.com/Hamzathul-karrar)**
 
