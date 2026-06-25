@@ -8,7 +8,7 @@
 [![Framer Motion](https://img.shields.io/badge/Framer_Motion-12.40-FF0066?logo=framer&logoColor=white)](https://www.framer.com/motion/)
 [![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 
-Visual Chat is an AI-powered chatbot that goes beyond text. It generates **live, animated visualizations** for technical concepts in real time. Ask about sorting algorithms, network protocols, data structures, physics concepts, and more — and watch as it draws them for you.
+Visual Chat is an AI-powered chatbot that goes beyond text. It generates **live, animated visualizations** for technical concepts in real time. Ask about sorting algorithms, network protocols, data structures, physics concepts, and more — and watch as it animates them for you.
 
 <div align="center">
 
@@ -92,7 +92,7 @@ User Question
 ```
 
 1. The user sends a question
-2. Two parallel API calls fire — one for a **text explanation**, one for **animation code**
+2. Two parallel API calls fire, one for a **text explanation**, one for **animation code**
 3. Text is rendered as Markdown; animation code is cleaned, transpiled via Babel, and rendered as a live React component
 4. Both appear independently as soon as they resolve (whichever finishes first shows up first)
 
@@ -307,6 +307,6 @@ The app uses a custom **Gemini-inspired dark theme** defined in `tailwind.config
 
 [![Try Visual Chat](https://img.shields.io/badge/Try%20Visual%20Chat-Visit%20Live%20App-8ab4f8?style=for-the-badge)](https://visual-chat.netlify.app/)
 
-**Built with ❤️ by [Hamzathul Karrar](https://github.com/Hamzathul-karrar)**
+**Built by [Hamzathul Karrar](https://github.com/Hamzathul-karrar)**
 
 </div>
