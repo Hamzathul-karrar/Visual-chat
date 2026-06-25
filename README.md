@@ -34,13 +34,26 @@ Visual Chat is an AI-powered chatbot that goes beyond text. It generates **live,
 Here are a few examples of what Visual Chat can explain and generate in real time:
 
 **Bubble Sort Visualization**  
-https://github.com/Hamzathul-karrar/Visual-chat/raw/main/public/demos/animated_bubblesort_vid.mp4
+
+
+https://github.com/user-attachments/assets/2bfe8fb7-e14d-46d3-a097-498672746c20
+
+
 
 **Black Hole Formation**  
-https://github.com/Hamzathul-karrar/Visual-chat/raw/main/public/demos/animated_blackhole_vid.mp4
 
-**Nuclear Physics**  
-https://github.com/Hamzathul-karrar/Visual-chat/raw/main/public/demos/animated_nuclear_vid.mp4
+
+https://github.com/user-attachments/assets/2566a0a0-b385-4446-a136-e48412abf255
+
+
+
+**Nuclear Reactor**  
+
+
+https://github.com/user-attachments/assets/f715af88-ae82-41c5-b18f-3f389bdc6ab8
+
+
+
 
 ---
 
